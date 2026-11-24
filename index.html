@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en-GB" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMC · Agentic Marketing &amp; Agentic Commerce 代理式行銷與代理式商務</title>
+<meta name="description" content="Bilingual interactive learning SPA on agentic marketing and agentic commerce. Architect: Prof. Shihmin Lo">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter','Noto Sans TC','Microsoft JhengHei','sans-serif'], serif: ['Merriweather','Noto Serif TC','serif'] } } } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.7/babel.min.js"></script>
+<style>
+@keyframes fadeInUp { from{opacity:0;transform:translateY(15px)} to{opacity:1;transform:translateY(0)} }
+.animate-fade-in { animation: fadeInUp 0.5s ease-out forwards; }
+.perspective { perspective: 1000px; }
+.transform-style-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.rotate-y-180 { transform: rotateY(180deg); }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+.dark ::-webkit-scrollbar-thumb { background: #475569; }
+header, footer, button, [role="button"], .ui-decoration { -webkit-user-select: none; user-select: none; }
+input, textarea, select { -webkit-user-select: text; user-select: text; }
+html, body { overflow-x: hidden; }
+#amc-toast { position: fixed; left: 50%; bottom: 3rem; transform: translateX(-50%); background: #004030; color: #D8C3A5; padding: .6rem 1.1rem; border-radius: .75rem; font: 600 13px Inter, sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,.3); z-index: 9999; opacity: 0; transition: opacity .3s; pointer-events: none; border: 1px solid rgba(216,195,165,.4); }
+#amc-toast.show { opacity: 1; }
+@media print { header, footer, aside { display: none !important; } body { padding-top: 0 !important; } }
+</style>
+</head>
+<body class="bg-[#f4f4f4] dark:bg-[#121212]">
+<script>
+(function(){
+  var ALLOWED = ['lolopodcast.github.io','localhost','127.0.0.1'];
+  var REDIRECT = 'https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo';
+  if (!ALLOWED.some(function(d){ return location.hostname === d || location.hostname.endsWith('.' + d); })) {
+    document.body.innerHTML = '<div style="text-align:center;padding:60px;font-family:sans-serif"><h1>Access Denied</h1><p>This resource is not authorised on this domain.</p></div>';
+    window.__AMC_BLOCKED = true;
+    setTimeout(function(){ location.href = REDIRECT; }, 3000);
+    return;
+  }
+  if (window.self !== window.top) {
+    try { window.top.location.href = window.self.location.href; }
+    catch (e) { document.body.innerHTML = '<div style="text-align:center;padding:60px"><h1>Frame Blocked</h1><p>This content cannot be embedded.</p></div>'; window.__AMC_BLOCKED = true; return; }
+  }
+  var COPYRIGHT_MSG = 'Intellectual Property of Prof. Shihmin Lo';
+  var timer = null;
+  window.__amcToast = function(){
+    var el = document.getElementById('amc-toast');
+    if (!el) { el = document.createElement('div'); el.id = 'amc-toast'; document.body.appendChild(el); }
+    el.textContent = DOMPurify.sanitize('© ' + COPYRIGHT_MSG, { ALLOWED_TAGS: [] });
+    el.classList.add('show'); clearTimeout(timer);
+    timer = setTimeout(function(){ el.classList.remove('show'); }, 2000);
+  };
+  document.addEventListener('contextmenu', function(e){
+    var sel = window.getSelection().toString().trim();
+    if (sel.length > 0) return true;
+    var tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true;
+    e.preventDefault(); window.__amcToast();
+  });
+  document.addEventListener('keydown', function(e){
+    var k = (e.key || '').toLowerCase();
+    if (e.key === 'F12') { e.preventDefault(); window.__amcToast(); return; }
+    if (e.ctrlKey && k === 'u') { e.preventDefault(); window.__amcToast(); return; }
+    if (e.ctrlKey && e.shiftKey && ['i','j','c'].indexOf(k) >= 0) { e.preventDefault(); window.__amcToast(); return; }
+  });
+  document.addEventListener('dragstart', function(e){
+    if (e.target.tagName === 'IMG' || (e.target.closest && e.target.closest('svg'))) e.preventDefault();
+  });
+})();
+</script>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+if (window.__AMC_BLOCKED) { throw new Error('blocked'); }
+const _SALT = 'AMC2026';
+const _e = (s, n) => { const p = s + ':' + n; let r = ''; for (let i = 0; i < p.length; i++) r += String.fromCharCode(p.charCodeAt(i) ^ ((i + 7) * 3 & 0xFF)); return btoa(r); };
+const _d = (token) => { const decoded = atob(token); let r = ''; for (let i = 0; i < decoded.length; i++) r += String.fromCharCode(decoded.charCodeAt(i) ^ ((i + 7) * 3 & 0xFF)); return parseInt(r.split(':')[1], 10); };
+const _A0 = _e(_SALT, 0), _A1 = _e(_SALT, 1), _A2 = _e(_SALT, 2), _A3 = _e(_SALT, 3);
+
+const dict = {};
+dict.zh = {
+  brand: "AMC",
+  title: "代理式行銷與代理式商務", subtitle: "從人類注意力競爭，到代理人決策競爭",
+  nav_modules: "單元目錄", nav_prev: "← 上一單元", nav_next: "下一單元 →", nav_home: "首頁",
+  key_terms: "關鍵專有名詞", flip_prompt: "點擊翻轉",
+  flip_status: "已讀 {read} / 已顯示 {shown} / 總計 {total}", flip_next: "下一組", flip_retry: "重新開始",
+  audio_read: "語音導覽", tts_play: "播放", tts_pause: "暫停", tts_stop: "停止",
+  quiz_title: "模組知識檢定", quiz_status: "答對 {correct} / 已答 {answered} / 總計 {total}",
+  quiz_next: "下一組", quiz_retry: "重新測驗", submit: "提交答案",
+  score: "得分", correct: "正確", incorrect: "錯誤", explanation: "解析",
+  overview_label: "Overview 概述", highlights_label: "Highlights 重點", deep_dive_label: "Deep Dive 深入解析", wrapup_label: "Wrap-up 總結",
+  figure_label: "圖解", copyright_toast: "Intellectual Property of Prof. Shihmin Lo",
+
+  analytics_title: "學習歷程分析", analytics_desc: "系統自動記錄你在各模組的停留時間、互動點擊、學習卡與測驗表現，協助你找出需要複習的單元，並可匯出 CSV 學習歷程。",
+  analytics_form_title: "基本資料（匯出前請填寫）",
+  analytics_group: "組別", analytics_group_select: "請選擇", analytics_dept: "系級", analytics_dept_ph: "例：IBS3",
+  analytics_id: "學號", analytics_id_ph: "例：113212599", analytics_name_en: "英文姓名", analytics_name_en_ph: "例：Shihmin Lo",
+  analytics_name_zh: "中文姓名", analytics_name_zh_ph: "例：王阿吉",
+  analytics_export_csv: "匯出 CSV 歷程記錄", analytics_fill_required: "請填寫完整資訊以解鎖匯出",
+  analytics_refresh_prompt: "偵測到先前的學習紀錄。是否刷新（清空）紀錄並重新開始？",
+  group_options: ["G1","G2","G3","G4","G5","G6","G7","G8","G9","G10","G11","G12","Others"],
+  analytics_total_time: "總學習時間", analytics_total_clicks: "總互動點擊", analytics_overall_acc: "總體測驗答對率", analytics_card_usage: "學習卡使用率",
+  analytics_module: "模組", analytics_time: "停留時間", analytics_clicks: "點擊次數", analytics_acc: "答對率",
+  analytics_correct_ans_total: "答對 / 已填答 / 總題數", analytics_cards_read_total: "已讀 / 總卡數",
+  analytics_no_data: "尚未測驗", analytics_sec: "秒", analytics_times: "次",
+  analytics_progress_title: "整體學習進度", analytics_progress_visited: "已瀏覽", analytics_progress_not_visited: "未瀏覽", analytics_progress_quiz_done: "已測驗",
+  analytics_wp_title: "弱點分析與複習建議", analytics_wp_incorrect: "答錯題目：", analytics_wp_goto: "→ 前往複習此模組",
+  analytics_wp_allpass: "所有已測驗模組答對率均達 75% 以上，表現優異！", analytics_wp_none: "尚無測驗紀錄，完成各模組測驗後即可看到分析。",
+  analytics_wp_saved: "💾 學習歷程已自動儲存於本機瀏覽器", analytics_wp_clear: "🗑 清除歷程",
+  analytics_wp_clear_confirm: "確定要清除所有學習歷程資料嗎？此操作無法復原。",
+  analytics_wp_tts_intro: "以下是您的弱點分析。", analytics_wp_tts_module: "模組：{name}，答對率 {acc}%，建議複習。",
+  analytics_wp_tts_allpass: "恭喜！所有已測驗模組答對率均達 75% 以上。",
+  analytics_detail_title: "各模組明細",
+
+  m0_nav: "0. 執行概要", m0_title: "執行概要：代理式商務的結構性轉型",
+  m0_intro: "消費者正逐步把搜尋、比較、下單、付款與售後管理，委託給個人 AI 代理人。這不只是企業用 AI 自動化行銷，而是需求端的結構性變革：企業必須同時服務人類，以及代表人類做決策的代理人。本課程依據《Agentic Marketing 與 Agentic Commerce》v1.6 文件，先從總體脈絡出發，說明消費者決策模型如何從 AIDA、AISAS 演進為雙軌決策漏斗；接著說明賣家如何通過「找得到、好選擇、好驗證、買得成」四道關卡，以及 GEO、KOL 與 KOC 的新角色。再介紹 UCP、ACP、AP2 等商務協定與代理支付，重新整合 STP、人物誌、旅程、4Ps、漏斗與 CRM，最後討論所需的 AI 與數位工具、組織轉型、轉型路線圖與治理。完成六個學習模組後，可在互動實驗室實際評估一家企業的代理就緒程度。",
+  m0_why: "為什麼代理式商務重要？",
+  m0_why_desc: "企業過去努力讓消費者進入自己的網站；未來還必須讓產品與服務進入消費者代理人的決策流程。沒有被代理人找到、理解與驗證的商品，可能根本不會出現在顧客眼前。",
+  m0_modules: [
+    { num: "01", title: "總體脈絡與核心概念", desc: "需求端委託化、概念差異、委託程度 H0–H3 與成熟度。" },
+    { num: "02", title: "決策模型、雙軌旅程與 OMO", desc: "AIDA → AISAS → 雙軌決策漏斗，以及線上線下融合。" },
+    { num: "03", title: "賣家四道關卡與 GEO／KOL／KOC", desc: "找得到、好選擇、好驗證、買得成，以及三者的新角色。" },
+    { num: "04", title: "生態系、商務協定與平台策略", desc: "六層生態系、UCP／ACP／AP2／MCP 與中介權力移轉。" },
+    { num: "05", title: "傳統行銷工具的重構", desc: "STP、人物誌、旅程、4Ps、漏斗、CRM 與 RFM。" },
+    { num: "06", title: "工具、組織、路線圖與治理", desc: "七層工具堆疊、組織轉型、決策關卡與風險控制。" }
+  ],
+  m0_stats: [ { val: "6", label: "學習模組" }, { val: "4", label: "賣家關卡" }, { val: "H0–H3", label: "委託程度" }, { val: "5", label: "互動實驗" } ],
+  m0_start: "開始學習 →",
+
+  // ===== M1 =====
+  m1_nav: "1. 總體脈絡與核心概念", m1_title: "總體脈絡與核心概念",
+  m1_overview: "代理式商務的起點不是企業的新工具，而是消費者行為的改變：人們開始把購物任務委託給個人 AI 代理人。本模組說明相關概念的差異、委託程度 H0–H3，以及截至 2026 年 11 月的發展成熟度。",
+  m1_highlights: ["需求端委託化", "個人 AI 代理人", "Agentic Marketing", "Agentic Commerce", "委託程度 H0–H3", "成熟度 L1–L5"],
+  m1_p1: "幾個概念需要先區分。AI 輔助行銷（AI-assisted Marketing）是行銷人員使用 AI 分析資料與產製內容；代理式行銷（Agentic Marketing）是代理人依目標規劃、執行、監測與調整行銷工作，廣義也包含「對消費者的代理人行銷」；代理式商務（Agentic Commerce）則是代理人參與商品探索、交易決策與經授權的商務操作。最遠端的自主商務（Autonomous Commerce），是在明確授權與限制內自主完成交易與後續管理。",
+  m1_p2: "需求端的個人代理人應依消費者的偏好與授權行動；供給端的企業代理人追求行銷與營運目標。兩者的利益不必然一致，這正是代理式商務最核心的策略張力。",
+  m1_p3: "委託程度可分為四級：H0 人類自行決策；H1 代理人協助資訊探索；H2 代理人篩選與推薦、人類確認；H3 代理人在限定授權內執行交易。委託程度是「任務層級」而非固定的人格特質：同一位顧客購買衛生紙可能交給 H3，購買高價筆電則停在 H2，由自己做最後決定。",
+  m1_p4: "依技術與商業部署所作的定性判斷，L1 內容生成與資料分析相對成熟；L2 企業代理人規劃與執行行銷持續商業化；L3 消費者代理人的探索、比較與推薦快速發展；L4 建立購物車、結帳與授權付款已有部分市場與商家部署；L5 自主採購、補貨與售後管理仍屬早期、條件式應用。這些層級不是市場滲透率統計，也不代表完全自主交易已成主流。",
+  m1_terms: [
+    { front: "個人 AI 代理人 Personal AI Agent", back: "代表消費者搜尋、比較、推薦，並在授權內下單與付款的 AI 助理，也稱 Personal Bot 或 Daily Agent。" },
+    { front: "代理式行銷 Agentic Marketing", back: "代理人依目標規劃、執行、監測與調整行銷工作；廣義也包含面向消費者代理人的行銷。" },
+    { front: "代理式商務 Agentic Commerce", back: "代理人參與商品探索、交易決策及經授權的商務操作，參與者包括消費者、代理人、商家與支付服務業者。" },
+    { front: "自主商務 Autonomous Commerce", back: "在明確授權與限制內，由代理人自主執行交易與後續管理；目前仍屬早期、條件式應用。" },
+    { front: "委託程度 H0–H3", back: "H0 自行決策、H1 協助探索、H2 推薦後人類確認、H3 授權內代為交易；依任務而定，不是固定人格。" },
+    { front: "委託人–代理人問題 Principal–Agent Problem", back: "代理人是否忠實代表消費者，而不是廣告商或佣金來源？這是代理式商務的核心治理議題。" }
+  ],
+  m1_wrapup: "代理式商務的本質是需求端的委託化。企業不再只面對瀏覽網頁的人類，也要面對代表人類搜尋、比較與交易的代理人。理解各概念的差異、委託程度依任務而定，以及目前 L4、L5 仍在早期，是規劃後續策略的基礎：既不能忽視這個轉變，也不應高估自主交易的普及速度。同時也要追問：代理人究竟代表誰的利益？",
+  m1_q: [
+    { q: "下列何者最能描述代理式商務的起點？", opts: ["企業導入更多行銷自動化工具", "消費者把搜尋、比較與交易任務委託給個人 AI 代理人", "搜尋引擎改用新的排名演算法", "電商平台全面取消網站"], ans: _A1, exp: "起點是需求端行為的改變：消費者開始委託代理人，而不只是企業端的工具升級。" },
+    { q: "關於委託程度 H0–H3，下列何者正確？", opts: ["它是顧客固定不變的人格特質", "H3 代表人類自行決策", "同一位顧客會依購買任務採用不同委託程度", "只適用於企業採購"], ans: _A2, exp: "委託程度是任務層級：買衛生紙可能 H3，買高價筆電可能 H2。" },
+    { q: "H2 指的是哪一種委託方式？", opts: ["人類自行決策", "代理人協助資訊探索", "代理人篩選推薦、人類確認", "代理人在授權內執行交易"], ans: _A2, exp: "H2 由代理人篩選與推薦，但最後決定仍由人類確認。" },
+    { q: "需求端個人代理人與供給端企業代理人的關係，何者正確？", opts: ["兩者利益必然一致", "企業代理人必須服從消費者代理人", "兩者不會有任何互動", "兩者利益不必然一致，形成策略張力"], ans: _A3, exp: "個人代理人依消費者偏好行動，企業代理人追求營運目標，兩者可能衝突。" },
+    { q: "截至 2026 年 11 月，L5 自主採購與售後管理的成熟度判斷為何？", opts: ["早期、條件式應用", "相對成熟", "已成市場主流", "已全面標準化"], ans: _A0, exp: "L5 受責任、風險、信任、授權與法規限制，仍屬早期。" },
+    { q: "成熟度 L1–L5 屬於什麼性質的資料？", opts: ["官方市場滲透率統計", "依技術與商業部署所作的定性判斷", "消費者問卷調查結果", "各國法規分級"], ans: _A1, exp: "文件明確說明這是定性判斷，不是市場滲透率或統計調查。" }
+  ],
+
+  // ===== M2 =====
+  m2_nav: "2. 決策模型、雙軌旅程與 OMO", m2_title: "決策模型、雙軌旅程與 OMO",
+  m2_overview: "消費者決策模型從大眾媒體時代的 AIDA、網路時代的 AISAS，演進為人類與代理人並存的雙軌決策漏斗。本模組比較三種模型，說明代理人從哪個階段介入，並延伸到線上線下融合的 O2O 與 OMO。",
+  m2_highlights: ["AIDA", "AISAS", "雙軌決策漏斗", "Search 最先被接手", "Share 成為證據", "O2O／OMO"],
+  m2_p1: "AIDA（Attention, Interest, Desire, Action）描述廣告如何說服人類；AIDMA 再加入 Memory（記憶）。電通（Dentsu）於 2004 年前後提出 AISAS（Attention, Interest, Search, Action, Share），加入網路時代消費者主動的「搜尋」與「分享」。這些模型描述的都是人類的心理與行為歷程。",
+  m2_p2: "代理式商務的關鍵變化是：Search 這一步最先被代理人接手，而 Share 產生的評價與口碑，成為代理人判斷時引用的證據。",
+  m2_p3: "雙軌決策漏斗把階段拆得更細：需求與認知（Awareness）、探索（Discovery）、資格篩選（Qualification）、考慮（Consideration）、授權（Authorization）、交易（Transaction）與顧客維繫（Retention）。需求與品牌偏好主要仍由人類形成；搜尋、比較與驗證最先由代理人執行；授權與交易則依委託程度而定。當條件不符或超出授權時，代理人應停止並請求人類確認，這就是人與代理人的任務交接（Human–Agent Handoff）。",
+  m2_p4: "代理式商務不只發生在線上。O2O（Online to Offline）指以線上資訊或優惠把顧客帶到門市；OMO（Online-Merge-Offline）則進一步整合會員、庫存、交易與服務資料。代理人可以查詢門市即時庫存、安排線上買門市取（BOPIS）、預約試穿或維修。對服飾、美妝、家具等需要實體體驗的商品，OMO 能力決定代理人能否把顧客帶進門市；其前提是「單一顧客檢視」。",
+  m2_terms: [
+    { front: "AIDA", back: "Attention 注意、Interest 興趣、Desire 慾望、Action 行動；描述廣告如何說服人類。" },
+    { front: "AISAS", back: "電通提出的網路時代模型：Attention、Interest、Search、Action、Share，加入搜尋與分享。" },
+    { front: "雙軌決策漏斗 Dual-track Funnel", back: "人類軌與代理人軌並存的漏斗：認知、探索、資格篩選、考慮、授權、交易、維繫。" },
+    { front: "任務交接 Human–Agent Handoff", back: "條件不符或超出授權時，代理人停止並把決定交回人類的機制。" },
+    { front: "O2O Online to Offline", back: "以線上資訊、預約或優惠，把顧客導引到實體門市消費。" },
+    { front: "OMO Online-Merge-Offline", back: "整合線上與門市的會員、庫存、交易與服務資料，讓顧客在任何通路得到一致體驗。" },
+    { front: "BOPIS", back: "Buy Online, Pick up In Store：線上購買、門市取貨；代理人可依距離與庫存選擇門市。" }
+  ],
+  m2_wrapup: "從 AIDA 到 AISAS，再到雙軌決策漏斗，改變的是「誰在執行每一個階段」。需求與偏好仍主要由人類形成，搜尋與驗證最先交給代理人，授權與交易則視委託程度而定。分享出去的評價成為下一位顧客的代理人所引用的證據。同時，代理人也會連結線上與門市，OMO 的資料整合因此成為實體通路的關鍵能力。",
+  m2_q: [
+    { q: "AISAS 相較於 AIDMA，新增了哪兩個消費者主動行為？", opts: ["Desire 與 Memory", "Search 與 Share", "Interest 與 Action", "Awareness 與 Retention"], ans: _A1, exp: "AISAS 加入 Search（搜尋）與 Share（分享），反映網路時代的主動消費者。" },
+    { q: "在代理式情境中，哪一個 AISAS 階段最先被代理人接手？", opts: ["Attention", "Interest", "Share", "Search"], ans: _A3, exp: "搜尋、比較與驗證是代理人最擅長、也最先接手的工作。" },
+    { q: "Share 在代理式商務中的新角色是什麼？", opts: ["不再重要", "只影響廣告預算", "評價與口碑成為代理人判斷時引用的證據", "被代理人自動刪除"], ans: _A2, exp: "顧客分享的評價會回到檢索範圍，成為下一位顧客的代理人所引用的證據。" },
+    { q: "當交易超出授權範圍時，代理人應如何處理？", opts: ["自行提高預算後完成交易", "停止並請求人類確認", "改向其他商家下單", "忽略限制直接付款"], ans: _A1, exp: "這是任務交接機制：超出授權即停止，交由人類決定。" },
+    { q: "OMO 與 O2O 最主要的差異是？", opts: ["OMO 只做線上銷售", "O2O 強調資料融合", "OMO 進一步整合會員、庫存、交易與服務資料", "兩者完全相同"], ans: _A2, exp: "O2O 是導流到門市；OMO 是線上線下資料與體驗的融合。" },
+    { q: "BOPIS 指的是什麼？", opts: ["線上購買、門市取貨", "門市購買、宅配到府", "線上預約、線上付款", "會員點數兌換"], ans: _A0, exp: "Buy Online, Pick up In Store，需要 OMS 與門市取貨流程支援。" }
+  ],
+
+  // ===== M3 =====
+  m3_nav: "3. 賣家四道關卡與 GEO／KOL／KOC", m3_title: "賣家四道關卡與 GEO／KOL／KOC",
+  m3_overview: "賣家如何讓代理人容易且經常找到、好選擇、好驗證，並能簡單又安全地完成交易？本模組把企業三種能力（說服、入選、執行）展開為四道關卡，並說明 GEO、KOL、KOC 在各關卡的角色轉變。",
+  m3_highlights: ["找得到", "好選擇", "好驗證", "買得成", "GEO 與 ACO", "KOL 設定決策條件"],
+  m3_p1: "第一關「找得到」：代理人從搜尋索引、商品 feed、平台與第三方內容中檢索。賣家要做好 SEO 基本功、把商品 feed 送進主要平台、以顧客的任務撰寫內容，並即時更新價格與庫存；資料過時的商家會被排除或降低排序。第二關「好選擇」：代理人依硬性條件篩選、依偏好排序。規格要完整並結構化、總價透明、差異化附上數據，並標明適用與不適用的情境。",
+  m3_p2: "KOL 塑造人類的需求與判斷條件，KOC 提供真實的使用證據，GEO 確保這些內容與事實在 AI 答案中被正確引用。",
+  m3_p3: "第三關「好驗證」：代理人會交叉比對多個來源。各通路資訊要一致，以測試、認證與真實評價取代形容詞，公開退換貨政策，並揭露贊助內容；不得在網頁中藏指令操縱代理人。第四關「買得成」：提供穩定的結帳流程，透過電商平台或支付業者支援商務協定，交易前即時確認價格與庫存，並設定金額上限與例外交由真人處理的護欄。",
+  m3_p4: "Google 的官方指南認為一般 SEO 原則仍決定 AI 功能中的能見度，並不建議另採特殊的 AEO／GEO 手法。因此 GEO 的目標從「排名第幾」轉為「是否被提及、被推薦、描述是否正確」，主要對應人類詢問 AI 的 H1–H2 情境；ACO 則對應代理人篩選並交易的 H2–H3 情境。KOL／KOC 的價值從中段導流移向前端需求與後端證據：導購連結與折扣碼可能被代理人繞過，KOL 卻能設定消費者交給代理人的決策條件。",
+  m3_p5: "對中小賣家而言，優先順序是：先整理一份正確、完整、各通路一致的商品主資料；再做好網站與商品 feed；累積可查證的第三方證據；使用平台既有的代理結帳功能；最後每季以固定情境題庫檢測 AI 可見度，找出未入選的原因並修正資料。",
+  m3_terms: [
+    { front: "GEO 生成式引擎最佳化", back: "Generative Engine Optimization：讓資訊在生成式 AI 回答中被提及、被引用並被正確描述。" },
+    { front: "ACO 代理式商務最佳化", back: "Agentic Commerce Optimization：提升代理人評估、入選與交易成功率的延伸概念，尚非統一標準。" },
+    { front: "KOL 關鍵意見領袖", back: "以專業或聲譽影響消費者；在代理式商務中能設定消費者交給代理人的決策條件。" },
+    { front: "KOC 關鍵意見消費者", back: "以真實使用經驗影響同儕；公開、具體的心得成為代理人查證的證據。" },
+    { front: "商品 feed", back: "把商品規格、價格、庫存等資料整理成標準格式，同步到搜尋引擎與各電商平台。" },
+    { front: "結構化資料 Schema", back: "以 Schema.org 等標準格式描述商品、價格與評價，讓機器能讀懂網頁內容。" },
+    { front: "AI 可見度監測", back: "以固定情境題庫詢問主要 AI 助理，追蹤品牌被提及率、推薦率與資訊正確率。" }
+  ],
+  m3_wrapup: "賣家的工作可以濃縮為四道關卡：找得到、好選擇、好驗證、買得成。前三關對應「入選」能力，第四關對應「執行」能力。GEO 讓品牌在 AI 答案中被正確引用，KOL 設定需求與判斷條件，KOC 提供使用證據。對中小賣家而言，最划算的投資不是新工具，而是一份正確、一致、即時的商品主資料。",
+  m3_q: [
+    { q: "賣家四道關卡的正確順序為何？", opts: ["好驗證→找得到→買得成→好選擇", "找得到→好選擇→好驗證→買得成", "買得成→找得到→好選擇→好驗證", "好選擇→好驗證→找得到→買得成"], ans: _A1, exp: "代理人先檢索，再篩選排序，再交叉驗證，最後才交易。" },
+    { q: "依 Google 官方指南，GEO 應如何理解？", opts: ["一套獨立於 SEO 的特殊技巧", "必須加入專用 Schema 才能出現在 AI 回答", "以 SEO 基本功為基礎，追求被提及、被推薦與描述正確", "只要購買廣告即可"], ans: _A2, exp: "Google 不建議特殊的 AEO／GEO 手法，GEO 是內容品質與可引用性的管理目標。" },
+    { q: "KOL 在代理式商務中最大的新影響力是？", opts: ["直接替消費者付款", "提供折扣碼", "取代商品 feed", "設定消費者交給代理人的決策條件"], ans: _A3, exp: "例如 KOL 強調重量與保固，消費者便把它們設為代理人的硬性條件。" },
+    { q: "為什麼導購連結與折扣碼的作用可能減弱？", opts: ["代理人可能自行比價並到其他通路下單", "法規全面禁止導購", "KOL 不再發布內容", "消費者不再線上購物"], ans: _A0, exp: "代理人依條件比價，不一定經過 KOL 提供的連結。" },
+    { q: "下列哪一項最不利於「好驗證」關卡？", opts: ["各通路資訊一致", "以第三方測試取代形容詞", "在網頁中藏指令要 AI 推薦自己", "公開退換貨政策"], ans: _A2, exp: "隱藏指令屬於提示詞注入，會被偵測並降低整體信任。" },
+    { q: "對中小賣家而言，第一優先應做什麼？", opts: ["自建大型語言模型", "整理正確、完整、各通路一致的商品主資料", "大量購買 KOL 業配", "自行開發商務協定串接"], ans: _A1, exp: "資料品質決定代理人能否找到、比較與驗證你的商品。" }
+  ],
+
+  // ===== M4 =====
+  m4_nav: "4. 生態系、商務協定與平台策略", m4_title: "生態系、商務協定與平台策略",
+  m4_overview: "代理式商務需要一套新的基礎設施：從需求、決策中介、探索評估，到商務互通、共享資料與履約。本模組說明六層生態系、UCP／ACP／AP2／MCP 等協定的分工，以及市場中介權力的移轉。",
+  m4_highlights: ["六層生態系", "UCP", "ACP", "AP2", "MCP", "去中介化與再中介化"],
+  m4_p1: "代理式商務生態系可分為六層：需求與偏好層（品牌、KOL、KOC、社群）、決策中介層（個人 AI 代理人）、探索與評估層（SEO、GEO、商品資料與評論）、商務互通層（API 與商務協定）、共享資料層（PIM、CMS、CDP、知識庫），以及執行與履約層（ERP、OMS、POS、CRM、支付與物流），再由治理層（授權、隱私、安全、稽核與責任）貫穿。各層並非固定技術堆疊，代理人也可能使用瀏覽器操作或商家既有 API。",
+  m4_p2: "API 是系統互動介面；協定則定義參與者交換資料及操作的共同規則。",
+  m4_p3: "UCP（Universal Commerce Protocol，通用商務協定）由 Google 於 2026 年 1 月發表，與 Shopify、Etsy、Wayfair、Target、Walmart 等共同制定，涵蓋探索、購買到售後。ACP（Agentic Commerce Protocol，代理式商務協定）由 OpenAI 與 Stripe 於 2025 年 9 月推出，涵蓋商品資料、結帳與委託支付。MCP（Model Context Protocol）提供 AI 應用連接工具與資料的通用機制，但不等於完整的交易或支付協定。支付憑證應依安全機制處理，不應直接交給模型。",
+  m4_p4: "支付層另有專門機制：Google 於 2025 年 9 月發表 AP2（Agent Payments Protocol），用於證明使用者已授權代理人進行特定購買，可作為 A2A 與 UCP 的延伸；卡組織也推出 Visa Intelligent Commerce、Mastercard Agent Pay 等方案，以代幣化憑證與消費上限讓代理人代表消費者付款。這些機制與 UCP／ACP 互補，不必然互斥，但也不保證任意代理人與商家皆可互通，導入前須確認版本、地區與支援功能。",
+  m4_p5: "市場中介權力可能從搜尋引擎與電商平台部分移轉到個人代理人，這是去中介化與再中介化並存的過程。企業可採封閉（自有代理人）、開放（接受第三方代理人）或混合策略。電商平台即使失去部分首頁流量，仍可能藉商品供給、支付、物流與履約服務取得價值。",
+  m4_terms: [
+    { front: "UCP 通用商務協定", back: "Google 主導、與多家零售與電商業者共同制定的開放標準，涵蓋探索、購買與售後。" },
+    { front: "ACP 代理式商務協定", back: "OpenAI 與 Stripe 推出，規範商品資料、結帳與委託支付等代理式交易介面。" },
+    { front: "AP2 代理支付協定", back: "Agent Payments Protocol：證明使用者已授權代理人進行特定購買，並支援安全付款。" },
+    { front: "MCP", back: "Model Context Protocol：讓 AI 應用連接工具與資料的通用機制，不是完整的交易協定。" },
+    { front: "API", back: "Application Programming Interface：系統之間交換資料與操作的介面。" },
+    { front: "去中介化與再中介化", back: "舊中介（搜尋、平台）部分被繞過，同時出現新中介（個人代理人）的並存過程。" },
+    { front: "代幣化憑證 Tokenization", back: "以代幣取代真實卡號，搭配消費上限與條件，讓代理人安全付款。" }
+  ],
+  m4_wrapup: "代理式商務的基礎設施由六層生態系加上治理層組成。UCP 與 ACP 處理商務流程，AP2 與卡組織方案處理授權付款，MCP 則讓 AI 連接工具與資料，各自分工而非互相取代。協定的存在不等於普遍可用，導入前要查核實際支援情況。市場權力正在部分移轉，但平台仍能透過供給與履約保有價值。",
+  m4_q: [
+    { q: "MCP（Model Context Protocol）的定位為何？", opts: ["完整的交易與支付協定", "讓 AI 應用連接工具與資料的通用機制", "卡組織的代理支付方案", "Google 的商品 feed 格式"], ans: _A1, exp: "MCP 是連接機制，不等於完整的交易或支付協定。" },
+    { q: "UCP 是由誰主導發表？", opts: ["OpenAI 與 Stripe", "Visa", "Google，與 Shopify、Etsy、Wayfair、Target、Walmart 等共同制定", "Mastercard"], ans: _A2, exp: "UCP 於 2026 年 1 月由 Google 在美國零售聯合會年會發表。" },
+    { q: "AP2 的主要用途是？", opts: ["證明使用者已授權代理人進行特定購買並安全付款", "管理商品圖片", "計算 RFM 分數", "監測社群聲量"], ans: _A0, exp: "AP2 處理授權、真實性與責任歸屬等付款問題。" },
+    { q: "代理式交易中，支付憑證應如何處理？", opts: ["直接交給模型保存", "寫在網頁上供代理人讀取", "依安全機制處理，不直接交付給模型", "由 KOL 代為保管"], ans: _A2, exp: "憑證應透過代幣化等安全機制處理，模型不應接觸真實憑證。" },
+    { q: "UCP 與 ACP 的關係，何者正確？", opts: ["必然互斥，只能擇一", "兩者完全相同", "ACP 是 UCP 的子規格", "不必然互斥，但也不保證任意代理人與商家皆可互通"], ans: _A3, exp: "導入前應查核版本、平台資格、地區與實際支援功能。" },
+    { q: "電商平台即使失去部分首頁流量，仍可能藉什麼取得價值？", opts: ["商品供給、支付、物流與履約服務", "只靠首頁廣告", "退出市場", "停止與代理人合作"], ans: _A0, exp: "這是再中介化：平台從流量入口轉向履約與服務的價值。" }
+  ],
+
+  // ===== M5 =====
+  m5_nav: "5. 傳統行銷工具的重構", m5_title: "傳統行銷工具的重構",
+  m5_overview: "STP、人物誌、使用者旅程、4Ps、行銷漏斗與 CRM 並未失去價值，而是需要重構分析單位與實作方式。本模組把它們整合為「策略設計鏈」加上貫穿全程的「衡量與顧客經營層」。",
+  m5_highlights: ["策略設計鏈", "STP＋委託程度", "代理決策設定檔", "服務藍圖", "雙軌漏斗 KPI", "CRM 與 RFM"],
+  m5_p1: "設計鏈依序推進：市場研究 → STP → 人物誌 → 旅程 → 4Ps → 執行（網站、SEO／GEO、社群、API 與協定）。另一方面，Funnel 與 CRM 構成平行的衡量與顧客經營層：Funnel 衡量各階段的轉換與流失，CRM 經營成交後的顧客關係與價值，兩者共同提供回饋給市場研究與 4Ps。",
+  m5_p2: "Funnel 與 CRM 不是流程的最後一步，而是貫穿整段旅程的平行層。",
+  m5_p3: "STP 的區隔變數新增任務標準化程度、購買頻率、風險、委託程度與代理通路使用；定位則要讓差異化可被代理人理解、比較與查核。人物誌不應虛構具有情感與人口屬性的 Bot Persona，而是加上「代理決策設定檔（Delegation Profile）」：任務目標、硬性限制、可權衡偏好、可信來源、決策權限（可搜尋、可推薦、可下單、付款上限）與例外處理。",
+  m5_p4: "旅程要畫成人類軌與代理人軌的雙軌旅程，並用服務藍圖連結前臺與後臺，標示任務交接與例外流程；體驗設計也從 UI/UX 延伸到代理人體驗（AX）：資料可讀、工具可用、錯誤可復原、權限可控。4Ps 方面，產品要可驗證、價格要即時與透明、通路要涵蓋代理生態系、推廣要同時創造人類需求並提供可信內容。",
+  m5_p5: "漏斗指標新增 AI 提及率、推薦率、候選清單入選率、授權完成率與交易成功率，且分母必須一致，不可把 AI 測試回答與實際訂單混用。CRM 以 RFM 評估顧客價值：R 最近一次、F 購買頻率、M 消費金額。代理人自動補貨可能推高 R 與 F，比價可能壓低單價，因此宜依通路分別計算並改看毛利。Reinartz 與 Kumar 的研究也提醒，關係長度與獲利僅弱到中度相關，RFM 高不等於忠誠。",
+  m5_terms: [
+    { front: "STP", back: "Segmentation 區隔、Targeting 目標市場選擇、Positioning 定位；代理式情境加入委託程度等變數。" },
+    { front: "代理決策設定檔 Delegation Profile", back: "記錄任務目標、硬性限制、偏好權重、可信來源、決策權限與例外處理，而非虛構 Bot 人格。" },
+    { front: "服務藍圖 Service Blueprint", back: "連結顧客可見的前臺接觸點與後臺流程，標示交接與例外。" },
+    { front: "代理人體驗 AX", back: "Agent Experience：資料可讀性、工具可用性、錯誤可復原性與權限可控性。" },
+    { front: "候選清單入選率", back: "Shortlist Inclusion Rate：品牌入選候選清單的情境數 ÷ 有候選清單的有效情境數。" },
+    { front: "RFM", back: "R 最近一次、F 購買頻率、M 消費金額；評估顧客價值的分群模型。" },
+    { front: "CLV 顧客終身價值", back: "Customer Lifetime Value：顧客在整段關係中預估貢獻的毛利。" }
+  ],
+  m5_wrapup: "傳統行銷工具不是被 AI 淘汰，而是成為管理 AI 中介市場的基礎方法。設計鏈從 STP 推進到執行，衡量與顧客經營層則貫穿全程。重點是加入委託程度、代理決策設定檔、雙軌旅程與代理人體驗，並用一致的分母衡量漏斗；CRM 則要依通路解讀 RFM，避免把代理人的自動行為誤認為品牌忠誠。",
+  m5_q: [
+    { q: "在重構後的架構中，Funnel 與 CRM 的定位是？", opts: ["設計鏈的最後一步", "貫穿整段旅程的平行衡量與顧客經營層", "可以省略的舊工具", "只在售後使用"], ans: _A1, exp: "Funnel 衡量各階段轉換，CRM 經營顧客價值，兩者平行貫穿全程。" },
+    { q: "代理決策設定檔與 Bot Persona 的差別是？", opts: ["前者記錄任務目標、限制、授權與例外，不虛構代理人的情感與人口屬性", "前者替代理人設定性別與年齡", "兩者完全相同", "前者只用於企業採購"], ans: _A0, exp: "代理人是決策中介者，不是具獨立消費需求的人口區隔。" },
+    { q: "代理式商務在 STP 中新增的區隔變數包括？", opts: ["只看年齡與所得", "只看地理區域", "委託程度、任務標準化程度、代理通路使用", "品牌顏色偏好"], ans: _A2, exp: "同一人口族群可能呈現不同的委託行為。" },
+    { q: "候選清單入選率的計算方式為何？", opts: ["品牌入選候選清單的情境數 ÷ 有候選清單的有效情境數", "網站造訪數 ÷ 廣告曝光數", "成交數 ÷ 網站造訪數", "評論數 ÷ 商品數"], ans: _A0, exp: "分母必須是有效、可比較的測試情境。" },
+    { q: "代理人自動補貨對 RFM 的影響，何者正確？", opts: ["會降低 R 與 F", "可能推高 R 與 F，未必代表品牌偏好", "與 RFM 無關", "只影響 M"], ans: _A1, exp: "應區分人類主動購買與代理自動購買。" },
+    { q: "Reinartz 與 Kumar 的研究對顧客價值管理的啟示是？", opts: ["關係越長一定越獲利", "應只看營收不看毛利", "忠誠只需看重複購買次數", "關係長度與獲利僅弱到中度相關，RFM 高不等於忠誠"], ans: _A3, exp: "忠誠需同時看態度與行為，並以毛利衡量。" }
+  ],
+
+  // ===== M6 =====
+  m6_nav: "6. 工具、組織、路線圖與治理", m6_title: "工具、組織、路線圖與治理",
+  m6_overview: "要把策略做出來，需要對應的 AI 與數位工具、跨部門的組織設計、分階段的轉型路線圖，以及風險治理。本模組整理七層工具堆疊、組織轉型的五個構面、三階段路線圖與 G1–G4 決策關卡。",
+  m6_highlights: ["七層工具堆疊", "先資料後工具", "代理通路小組", "資料負責人", "G1–G4 決策關卡", "風險治理"],
+  m6_p1: "工具依生態系分為七層：需求與偏好層（社群聆聽、生成式內容、網紅合作管理）、探索與評估層（網站搜尋診斷、結構化資料、商品 feed 管理、AI 可見度監測、評價管理）、企業代理人層（企業代理人平台、行銷自動化、AI 客服代理）、商務互通層（API 閘道、UCP／ACP、AP2、MCP）、共享資料層（PIM、CMS、CDP、知識庫與 RAG、資料倉儲）、執行與履約層（ERP、OMS、POS、CRM、支付與詐欺偵測、物流）與衡量治理層（網站分析、BI、A/B 實驗、MMM、同意管理、稽核紀錄）。",
+  m6_p2: "先資料、後工具：一份正確、完整、各通路一致的商品主資料，效果勝過任何新導入的 AI 工具。",
+  m6_p3: "代理式商務不是行銷部門單獨能完成的專案。組織結構要從功能分立轉為跨功能的代理通路小組；決策權從人工審核每項活動，轉為人設定目標與護欄、代理人在範圍內執行、例外交給人；商品與顧客資料視為資料產品，有明確的資料負責人；績效指標加入入選率、交易成功率與依通路的 RFM／CLV；文化轉向實驗與證據導向，同時保留品牌與倫理判斷。",
+  m6_p4: "路線圖分三階段：0–3 個月建立代理人就緒資訊（資料盤點、基準 KPI、AI 可見度測試）；3–12 個月建立代理人就緒商務（API、授權與例外測試、單一通路試行）；12–24 個月發展代理式商業模式（擴大互通、評估自有代理人、治理稽核）。每階段以四道決策關卡把關：G1 資料是否正確完整、G2 代理通路需求是否可測量、G3 授權與付款風控是否完備、G4 增量毛利是否足以支應成本。G3 未通過，不得啟用自主交易。",
+  m6_p5: "主要風險包括代理人錯誤推薦、過時價格與庫存、提示詞注入、未授權交易、支付詐欺、隱私、商業利益衝突與顧客關係被中介。對應的控制措施有權威資料與時間戳記、交易前即時確認、隔離指令與資料、金額上限與確認關卡、資料最小化，以及揭露廣告與佣金。整體而言，競爭邏輯正從注意力經濟、推薦經濟，延伸到委託經濟：讓人類信任我，並讓獲授權的代理人選擇我。",
+  m6_terms: [
+    { front: "CDP 顧客資料平台", back: "Customer Data Platform：整合線上與門市的顧客資料，形成單一顧客檢視。" },
+    { front: "PIM 商品資訊管理", back: "Product Information Management：集中管理商品規格、圖片與說明，確保各通路一致。" },
+    { front: "OMS 訂單管理系統", back: "Order Management System：管理跨通路訂單與庫存分配，支援線上買門市取。" },
+    { front: "RAG 檢索增強生成", back: "Retrieval-Augmented Generation：AI 回答前先檢索權威文件；即時價格庫存仍應取自營運系統。" },
+    { front: "資料負責人 Data Owner", back: "把商品或顧客資料視為資料產品，負責其正確性、更新與存取權限的角色。" },
+    { front: "提示詞注入 Prompt Injection", back: "在外部內容中藏入指令誘導 AI；應將外部內容視為不可信資料並最小化工具權限。" },
+    { front: "委託經濟 Delegation Economy", back: "競爭目標是讓人類信任我，並讓獲授權的代理人選擇我。" }
+  ],
+  m6_wrapup: "策略要付諸實行，需要工具、組織與節奏三者配合。工具依七層生態系選用，但先資料、後工具；組織從功能分立轉為跨功能小組，並讓每份資料有負責人；轉型分三階段推進，以 G1–G4 決策關卡把關，授權與風控未完備前不啟用自主交易。數位行銷的任務因此從流量經營，延伸到需求創造、決策中介、商務互通與顧客價值管理。",
+  m6_q: [
+    { q: "CDP（顧客資料平台）的主要功能是？", opts: ["管理商品規格", "整合線上與門市資料成單一顧客檢視", "處理門市收銀", "產製影片"], ans: _A1, exp: "CDP 是 OMO 與 CRM 正確評估顧客價值的前提。" },
+    { q: "即時價格與庫存應從哪裡取得？", opts: ["ERP／OMS 等權威營運系統", "向量索引中的舊資料", "社群貼文", "KOL 影片"], ans: _A0, exp: "RAG 適合知識性內容，即時資料應直接取自營運系統。" },
+    { q: "決策關卡 G3 若未通過，應如何處理？", opts: ["照常啟用自主交易", "不得啟用自主交易", "直接擴大到所有通路", "取消所有資料整理"], ans: _A1, exp: "G3 檢查授權、付款風控與例外處理，未完備即不得自主交易。" },
+    { q: "「資料負責人」的意義是？", opts: ["把商品與顧客資料視為資料產品，有明確負責人", "由 IT 一人管理所有事務", "資料不需要維護", "由外包廠商決定一切"], ans: _A0, exp: "資料沒人負責，是代理式商務最常見的失敗原因之一。" },
+    { q: "對提示詞注入的控制措施是？", opts: ["讓代理人執行網頁中的所有指令", "擴大工具權限", "將外部內容視為不可信資料、隔離指令與資料、工具權限最小化", "關閉所有網站"], ans: _A2, exp: "外部內容是資料，不是指令。" },
+    { q: "委託經濟的競爭目標是？", opts: ["讓人類看到我", "讓演算法推薦我", "全面降價", "讓人類信任我，並讓獲授權的代理人選擇我"], ans: _A3, exp: "注意力、推薦與委託三種邏輯將長期並存。" }
+  ],
+
+  // ===== Lab / Resources =====
+  mlab_nav: "7. 互動實驗室", mlab_title: "互動實驗室", mlab_desc: "用五個互動工具，把模組中的概念套用到實際情境：判斷委託程度、檢核賣家四關、診斷漏斗、計算 RFM，以及評估轉型決策關卡。",
+  mlab_labs: [
+    { title: "實驗一：委託程度判斷器", desc: "調整商品特性，推估消費者最可能採用的委託程度 H0–H3，以及賣家的重點。" },
+    { title: "實驗二：賣家四關自我檢核", desc: "勾選已完成的項目，找出你在找得到、好選擇、好驗證、買得成中最弱的一關。" },
+    { title: "實驗三：雙軌漏斗診斷", desc: "輸入情境測試與交易數字，計算各階段比率並找出最大的流失點。" },
+    { title: "實驗四：RFM 顧客價值計算", desc: "輸入顧客的最近一次、頻率與金額，計算 RFM 分數並判斷顧客類型。" },
+    { title: "實驗五：轉型決策關卡", desc: "逐一檢查 G1–G4，判斷企業可以推進到哪一個轉型階段。" }
+  ],
+  mres_nav: "8. 外部學習資源", mres_title: "外部學習資源", mres_desc: "以下為本課程引用的官方文件、新聞報導與學術文獻，可延伸閱讀。文件會持續更新，引用時請留意版本與適用範圍。",
+  mres_groups: [
+    { title: "商務協定與代理支付", links: [
+      { label: "Google UCP Guide", url: "https://developers.google.com/merchant/ucp", desc: "Google 通用商務協定（UCP）商家指南。" },
+      { label: "UCP Overview (Google Pay)", url: "https://developers.google.com/pay/api/universal-commerce-protocol/overview", desc: "UCP 概觀與 Google Pay 支付憑證的角色。" },
+      { label: "Google: Agentic commerce tools & UCP", url: "https://blog.google/products/ads-commerce/agentic-commerce-ai-tools-protocol-retailers-platforms", desc: "Google 發表 UCP 的官方部落格文章。" },
+      { label: "Agentic Commerce Protocol: Key Concepts", url: "https://agentic-commerce-protocol.com/docs/commerce/guides/key-concepts", desc: "ACP 的核心概念：商品資料、結帳與委託支付。" },
+      { label: "Stripe & OpenAI: Instant Checkout and ACP", url: "https://stripe.com/newsroom/news/stripe-openai-instant-checkout", desc: "2025-09-29 Stripe 發布 ACP 的公告。" },
+      { label: "Google Cloud: Agent Payments Protocol (AP2)", url: "https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol", desc: "2025-09-16 AP2 發表文章。" },
+      { label: "AP2 Protocol Site", url: "https://ap2-protocol.org/", desc: "AP2 規格、文件與版本資訊。" }
+    ]},
+    { title: "搜尋、GEO 與入門指南", links: [
+      { label: "Google: AI Features and Your Website", url: "https://developers.google.com/search/docs/appearance/ai-features", desc: "AI Overviews／AI Mode 與網站的關係。" },
+      { label: "Google: Optimizing for Generative AI Features", url: "https://developers.google.com/search/docs/fundamentals/ai-optimization-guide", desc: "Google 對生成式 AI 搜尋最佳化的官方立場。" },
+      { label: "Stripe: Agentic Commerce Primer", url: "https://stripe.com/guides/agentic-commerce-primer", desc: "代理式商務入門指南。" }
+    ]},
+    { title: "支付網路與產業報導", links: [
+      { label: "Visa: Intelligent Commerce Connect", url: "https://corporate.visa.com/en/sites/visa-perspectives/newsroom/visa-intelligent-commerce-connect-ai-shopping-for-businesses.html", desc: "2026-04-08 Visa 代理商務整合方案新聞稿。" },
+      { label: "American Banker: Agentic payments", url: "https://www.americanbanker.com/payments/news/visa-mastercard-launch-payments-for-agentic-ai", desc: "Visa 與 Mastercard Agent Pay 的報導。" }
+    ]},
+    { title: "決策模型與顧客價值", links: [
+      { label: "Dentsu: AISAS model", url: "https://dentsu-ho.com/en/articles/3100", desc: "電通說明 AISAS 模型的起源與演進。" },
+      { label: "HBS Working Knowledge: The Mismanagement of Customer Loyalty", url: "https://hbswk.hbs.edu/archive/the-mismanagement-of-customer-loyalty-not-all-customers-are-created-equal", desc: "Reinartz 與 Kumar 對顧客忠誠與獲利的研究摘要。" }
+    ]}
+  ],
+  mana_nav: "9. 學習歷程分析",
+
+  date: "Version 2026.11.24", copyright: "For Educational Use Only",
+  architect_label: "Architect:", architect_name: "Prof. Shihmin Lo",
+  architect_url: "https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo"
+};
+dict.en = {
+  brand: "AMC",
+  title: "Agentic Marketing & Agentic Commerce", subtitle: "From competing for attention to competing for delegated decisions",
+  nav_modules: "Modules", nav_prev: "← Previous", nav_next: "Next →", nav_home: "Home",
+  key_terms: "Key Terms", flip_prompt: "Click to flip",
+  flip_status: "Read {read} / Shown {shown} / Total {total}", flip_next: "Next", flip_retry: "Restart",
+  audio_read: "Audio Guide", tts_play: "Play", tts_pause: "Pause", tts_stop: "Stop",
+  quiz_title: "Module Knowledge Check", quiz_status: "Correct {correct} / Answered {answered} / Total {total}",
+  quiz_next: "Next", quiz_retry: "Retry", submit: "Submit",
+  score: "Score", correct: "Correct", incorrect: "Incorrect", explanation: "Explanation",
+  overview_label: "Overview", highlights_label: "Highlights", deep_dive_label: "Deep Dive", wrapup_label: "Wrap-up",
+  figure_label: "Figure", copyright_toast: "Intellectual Property of Prof. Shihmin Lo",
+
+  analytics_title: "Learning Analytics", analytics_desc: "Your time on each module, interaction clicks, flashcard use and quiz results are recorded automatically, so you can see which units to review and export your learning record as a CSV file.",
+  analytics_form_title: "Your Details (required before export)",
+  analytics_group: "Group", analytics_group_select: "Select", analytics_dept: "Dept. & Year", analytics_dept_ph: "e.g. IBS3",
+  analytics_id: "Student ID", analytics_id_ph: "e.g. 113212599", analytics_name_en: "English Name", analytics_name_en_ph: "e.g. Shihmin Lo",
+  analytics_name_zh: "Chinese Name", analytics_name_zh_ph: "e.g. 王阿吉",
+  analytics_export_csv: "Export CSV Record", analytics_fill_required: "Complete all fields to unlock export",
+  analytics_refresh_prompt: "Previous learning records were found. Refresh (clear) them and start again?",
+  group_options: ["G1","G2","G3","G4","G5","G6","G7","G8","G9","G10","G11","G12","Others"],
+  analytics_total_time: "Total Study Time", analytics_total_clicks: "Total Clicks", analytics_overall_acc: "Overall Quiz Accuracy", analytics_card_usage: "Flashcard Usage",
+  analytics_module: "Module", analytics_time: "Time", analytics_clicks: "Clicks", analytics_acc: "Accuracy",
+  analytics_correct_ans_total: "Correct / Answered / Total", analytics_cards_read_total: "Read / Total",
+  analytics_no_data: "Not taken", analytics_sec: "s", analytics_times: "",
+  analytics_progress_title: "Overall Progress", analytics_progress_visited: "Visited", analytics_progress_not_visited: "Not visited", analytics_progress_quiz_done: "Quiz done",
+  analytics_wp_title: "Weak Points & Review Suggestions", analytics_wp_incorrect: "Incorrect questions:", analytics_wp_goto: "→ Review this module",
+  analytics_wp_allpass: "All quizzed modules are at 75% or above. Excellent work!", analytics_wp_none: "No quiz records yet. Complete the module quizzes to see your analysis.",
+  analytics_wp_saved: "💾 Your learning record is saved automatically in this browser", analytics_wp_clear: "🗑 Clear Record",
+  analytics_wp_clear_confirm: "Clear all learning records? This cannot be undone.",
+  analytics_wp_tts_intro: "Here is your weak-point analysis.", analytics_wp_tts_module: "Module: {name}, accuracy {acc} percent. Review suggested.",
+  analytics_wp_tts_allpass: "Congratulations! All quizzed modules are at 75 percent or above.",
+  analytics_detail_title: "Module Details",
+
+  m0_nav: "0. Executive Summary", m0_title: "Executive Summary: A Structural Shift to Agentic Commerce",
+  m0_intro: "Consumers are increasingly delegating searching, comparing, ordering, paying and after-sales management to personal AI agents. This is not just firms automating marketing with AI; it is a structural change on the demand side. Firms must now serve both humans and the agents that make decisions on their behalf. Based on version 1.6 of the Agentic Marketing and Agentic Commerce document, this course starts with the big picture and shows how consumer decision models have evolved from AIDA and AISAS into a dual-track decision funnel. It then explains how sellers can pass four gates — be found, be chosen, be verified and be bought — and the new roles of GEO, KOLs and KOCs. Next, it introduces commerce protocols and agent payments such as UCP, ACP and AP2, and reintegrates STP, personas, journeys, the 4Ps, the funnel and CRM. Finally, it covers the AI and digital tools required, organisational change, a transformation roadmap and governance. After the six modules, you can assess a firm's agent readiness in the Interactive Lab.",
+  m0_why: "Why does agentic commerce matter?",
+  m0_why_desc: "Firms used to work hard to bring consumers to their websites. Now they must also get their products and services into the consumer's agent's decision flow. Products that agents cannot find, understand and verify may never reach the customer at all.",
+  m0_modules: [
+    { num: "01", title: "The Big Picture & Core Concepts", desc: "Demand-side delegation, key concepts, delegation levels H0–H3 and maturity." },
+    { num: "02", title: "Decision Models, Dual-track Journey & OMO", desc: "AIDA → AISAS → the dual-track funnel, plus online–offline integration." },
+    { num: "03", title: "Seller Gates & GEO / KOL / KOC", desc: "Be found, be chosen, be verified, be bought — and the new roles of each." },
+    { num: "04", title: "Ecosystem, Protocols & Platform Strategy", desc: "Six-layer ecosystem, UCP / ACP / AP2 / MCP and shifting intermediary power." },
+    { num: "05", title: "Marketing Frameworks Revisited", desc: "STP, personas, journeys, the 4Ps, the funnel, CRM and RFM." },
+    { num: "06", title: "Tools, Organisation, Roadmap & Governance", desc: "Seven-layer tool stack, organisational change, gates and risk control." }
+  ],
+  m0_stats: [ { val: "6", label: "Modules" }, { val: "4", label: "Seller Gates" }, { val: "H0–H3", label: "Delegation Levels" }, { val: "5", label: "Interactive Labs" } ],
+  m0_start: "Start Learning →",
+
+  // ===== M1 =====
+  m1_nav: "1. The Big Picture & Core Concepts", m1_title: "The Big Picture & Core Concepts",
+  m1_overview: "Agentic commerce does not start with a new tool for firms but with a change in consumer behaviour: people are beginning to delegate shopping tasks to personal AI agents. This module distinguishes the key concepts, introduces delegation levels H0–H3 and reviews maturity as of November 2026.",
+  m1_highlights: ["Demand-side delegation", "Personal AI agent", "Agentic Marketing", "Agentic Commerce", "Delegation levels H0–H3", "Maturity L1–L5"],
+  m1_p1: "Several concepts need to be separated first. AI-assisted marketing means marketers use AI to analyse data and produce content. Agentic marketing means agents plan, execute, monitor and adjust marketing work towards goals; in a broad sense it also includes marketing to consumers' agents. Agentic commerce means agents take part in product discovery, purchase decisions and authorised commercial operations. At the far end, autonomous commerce means agents complete transactions and follow-up management on their own within clear authorisations and limits.",
+  m1_p2: "A personal agent on the demand side should act on the consumer's preferences and authorisation, while a firm's agent on the supply side pursues marketing and operating goals. Their interests are not necessarily aligned — this is the core strategic tension of agentic commerce.",
+  m1_p3: "Delegation has four levels: H0, the human decides; H1, the agent assists with information search; H2, the agent filters and recommends and the human confirms; H3, the agent executes the transaction within set authority. Delegation is task-level, not a fixed personality trait: the same customer may hand toilet paper to H3 but stop at H2 for an expensive laptop and make the final call themselves.",
+  m1_p4: "Based on a qualitative judgement of technical and commercial deployment, L1 content generation and data analysis is relatively mature; L2 firm agents planning and running marketing are being commercialised; L3 consumer agents that explore, compare and recommend are developing fast; L4 building carts, checkout and authorised payment is deployed in some markets and by some merchants; L5 autonomous purchasing, replenishment and after-sales remain early and conditional. These levels are not market-penetration statistics and do not mean fully autonomous buying is mainstream.",
+  m1_terms: [
+    { front: "Personal AI Agent", back: "An AI assistant that searches, compares and recommends for a consumer and can order and pay within authorisation; also called a personal bot or daily agent." },
+    { front: "Agentic Marketing", back: "Agents plan, execute, monitor and adjust marketing towards goals; broadly, it also includes marketing to consumers' agents." },
+    { front: "Agentic Commerce", back: "Agents take part in discovery, purchase decisions and authorised operations, involving consumers, agents, merchants and payment providers." },
+    { front: "Autonomous Commerce", back: "Agents execute transactions and follow-up on their own within clear authorisation and limits; still early and conditional." },
+    { front: "Delegation Levels H0–H3", back: "H0 self-decide, H1 assisted search, H2 recommend then human confirms, H3 transact within authority; set per task, not per person." },
+    { front: "Principal–Agent Problem", back: "Does the agent faithfully represent the consumer rather than advertisers or commission sources? A core governance issue." }
+  ],
+  m1_wrapup: "The essence of agentic commerce is delegation on the demand side. Firms no longer face only humans browsing web pages but also agents that search, compare and transact on their behalf. Knowing how the concepts differ, that delegation is set per task, and that L4 and L5 are still early is the basis for later strategy: do not ignore the shift, but do not overestimate how fast autonomous buying will spread. Always ask, too: whose interests does the agent really serve?",
+  m1_q: [
+    { q: "What best describes the starting point of agentic commerce?", opts: ["Firms adopting more marketing automation tools", "Consumers delegating search, comparison and transactions to personal AI agents", "Search engines switching to a new ranking algorithm", "E-commerce platforms abolishing websites"], ans: _A1, exp: "It starts with a change in demand-side behaviour, not just a tool upgrade on the firm side." },
+    { q: "Which statement about delegation levels H0–H3 is correct?", opts: ["They are a customer's fixed personality trait", "H3 means the human decides alone", "The same customer uses different levels for different purchase tasks", "They apply only to corporate purchasing"], ans: _A2, exp: "Delegation is task-level: toilet paper may be H3, an expensive laptop H2." },
+    { q: "What does H2 mean?", opts: ["The human decides alone", "The agent assists with information search", "The agent filters and recommends, the human confirms", "The agent transacts within authority"], ans: _A2, exp: "At H2 the agent filters and recommends, but the human makes the final decision." },
+    { q: "How do personal agents and firm agents relate?", opts: ["Their interests are always aligned", "Firm agents must obey consumer agents", "They never interact", "Their interests are not necessarily aligned, creating strategic tension"], ans: _A3, exp: "Personal agents follow consumer preferences; firm agents pursue operating goals. They can conflict." },
+    { q: "As of November 2026, how mature is L5 (autonomous purchasing and after-sales)?", opts: ["Early and conditional", "Relatively mature", "Already mainstream", "Fully standardised"], ans: _A0, exp: "L5 is limited by liability, risk, trust, authorisation and regulation." },
+    { q: "What kind of data are maturity levels L1–L5?", opts: ["Official market-penetration statistics", "A qualitative judgement based on technical and commercial deployment", "Consumer survey results", "National regulatory tiers"], ans: _A1, exp: "The document states they are qualitative judgements, not penetration rates or surveys." }
+  ],
+
+  // ===== M2 =====
+  m2_nav: "2. Decision Models, Dual-track Journey & OMO", m2_title: "Decision Models, Dual-track Journey & OMO",
+  m2_overview: "Consumer decision models have evolved from AIDA in the mass-media era and AISAS in the internet era into a dual-track funnel where humans and agents coexist. This module compares the three models, shows where agents step in, and extends to O2O and OMO, which connect online and offline.",
+  m2_highlights: ["AIDA", "AISAS", "Dual-track funnel", "Search taken over first", "Share becomes evidence", "O2O / OMO"],
+  m2_p1: "AIDA (Attention, Interest, Desire, Action) describes how advertising persuades people; AIDMA adds Memory. Around 2004, Dentsu proposed AISAS (Attention, Interest, Search, Action, Share), adding the active searching and sharing of internet-era consumers. All of these models describe human psychological and behavioural processes.",
+  m2_p2: "The key change in agentic commerce is this: Search is the first step agents take over, and the reviews and word of mouth created by Share become the evidence agents cite when they judge.",
+  m2_p3: "The dual-track funnel splits the stages more finely: Awareness, Discovery, Qualification, Consideration, Authorization, Transaction and Retention. Needs and brand preferences are still formed mainly by humans; searching, comparing and verifying are taken over first by agents; authorisation and transaction depend on the delegation level. When conditions are not met or authority is exceeded, the agent should stop and ask the human to confirm — this is the human–agent handoff.",
+  m2_p4: "Agentic commerce does not happen only online. O2O (Online to Offline) uses online information or offers to bring customers into stores; OMO (Online-Merge-Offline) goes further and integrates membership, inventory, transaction and service data. Agents can check live store stock, arrange buy-online-pick-up-in-store (BOPIS), and book fittings or repairs. For fashion, beauty, furniture and other products that need a physical experience, OMO capability decides whether agents can bring customers into stores; its precondition is a single customer view.",
+  m2_terms: [
+    { front: "AIDA", back: "Attention, Interest, Desire, Action — how advertising persuades people." },
+    { front: "AISAS", back: "Dentsu's internet-era model: Attention, Interest, Search, Action, Share, adding search and sharing." },
+    { front: "Dual-track Funnel", back: "A funnel with a human track and an agent track: awareness, discovery, qualification, consideration, authorisation, transaction, retention." },
+    { front: "Human–Agent Handoff", back: "The mechanism by which an agent stops and returns the decision to the human when conditions or authority are exceeded." },
+    { front: "O2O — Online to Offline", back: "Using online information, bookings or offers to bring customers into physical stores." },
+    { front: "OMO — Online-Merge-Offline", back: "Integrating online and store membership, inventory, transaction and service data for a consistent experience in any channel." },
+    { front: "BOPIS", back: "Buy Online, Pick up In Store; agents can choose a store by distance and stock." }
+  ],
+  m2_wrapup: "From AIDA to AISAS to the dual-track funnel, what changes is who performs each stage. Needs and preferences are still formed mainly by humans, search and verification pass to agents first, and authorisation and transaction depend on the delegation level. Shared reviews become the evidence that the next customer's agent cites. Agents also connect online and stores, so OMO data integration becomes a key capability for physical channels.",
+  m2_q: [
+    { q: "Compared with AIDMA, which two active behaviours does AISAS add?", opts: ["Desire and Memory", "Search and Share", "Interest and Action", "Awareness and Retention"], ans: _A1, exp: "AISAS adds Search and Share, reflecting active internet-era consumers." },
+    { q: "In an agentic setting, which AISAS stage do agents take over first?", opts: ["Attention", "Interest", "Share", "Search"], ans: _A3, exp: "Searching, comparing and verifying are what agents do best and take over first." },
+    { q: "What is the new role of Share in agentic commerce?", opts: ["It no longer matters", "It only affects ad budgets", "Reviews and word of mouth become evidence agents cite", "Agents delete it automatically"], ans: _A2, exp: "Shared reviews return to the searchable pool and become evidence for the next customer's agent." },
+    { q: "When a transaction exceeds authority, what should the agent do?", opts: ["Raise the budget itself and complete the purchase", "Stop and ask the human to confirm", "Order from another merchant", "Ignore the limit and pay"], ans: _A1, exp: "This is the handoff mechanism: stop when authority is exceeded and let the human decide." },
+    { q: "What is the main difference between OMO and O2O?", opts: ["OMO is online-only", "O2O emphasises data integration", "OMO further integrates membership, inventory, transaction and service data", "They are identical"], ans: _A2, exp: "O2O drives traffic to stores; OMO merges online and offline data and experience." },
+    { q: "What does BOPIS mean?", opts: ["Buy online, pick up in store", "Buy in store, home delivery", "Book online, pay online", "Redeem loyalty points"], ans: _A0, exp: "Buy Online, Pick up In Store — supported by an OMS and in-store pickup process." }
+  ],
+
+  // ===== M3 =====
+  m3_nav: "3. Seller Gates & GEO / KOL / KOC", m3_title: "Seller Gates & GEO / KOL / KOC",
+  m3_overview: "How can sellers make agents find them easily and often, choose and verify them readily, and complete purchases simply and safely? This module unfolds the firm's three capabilities (persuasion, selection, execution) into four gates and explains how the roles of GEO, KOLs and KOCs change at each gate.",
+  m3_highlights: ["Be found", "Be chosen", "Be verified", "Be bought", "GEO vs ACO", "KOLs set decision criteria"],
+  m3_p1: "Gate 1, be found: agents retrieve from search indexes, product feeds, platforms and third-party content. Sellers need solid SEO basics, product feeds sent to the main platforms, content written around customers' tasks, and live prices and stock; merchants with stale data are excluded or ranked lower. Gate 2, be chosen: agents filter by hard constraints and rank by preferences. Specifications should be complete and structured, total prices transparent, differentiation backed by data, and suitable and unsuitable uses stated clearly.",
+  m3_p2: "KOLs shape human needs and decision criteria, KOCs supply real usage evidence, and GEO makes sure this content and the facts are cited correctly in AI answers.",
+  m3_p3: "Gate 3, be verified: agents cross-check several sources. Information must match across channels; tests, certifications and genuine reviews should replace adjectives; return policies should be public; and sponsored content must be disclosed. Never hide instructions in web pages to manipulate agents. Gate 4, be bought: offer a stable checkout, support commerce protocols through your e-commerce platform or payment provider, re-confirm price and stock before the transaction, and set guardrails such as spending limits and handing exceptions to a human.",
+  m3_p4: "Google's official guidance holds that ordinary SEO principles still determine visibility in AI features and advises against special AEO or GEO tactics. GEO therefore shifts from 'what rank are we' to 'are we mentioned, recommended and described correctly', mainly in H1–H2 settings where people ask AI; ACO covers H2–H3 settings where agents filter and transact. The value of KOLs and KOCs moves from mid-funnel traffic to up-front demand and back-end evidence: affiliate links and discount codes may be bypassed by agents, but KOLs can set the criteria consumers hand to their agents.",
+  m3_p5: "For small and medium sellers, the order of priority is: first, build one correct and complete product master data set that is consistent across channels; then get the website and product feeds right; build verifiable third-party evidence; use the agent checkout features your platform already offers; and every quarter, test AI visibility with a fixed set of scenario prompts to find why you were not shortlisted and fix the data.",
+  m3_terms: [
+    { front: "GEO — Generative Engine Optimisation", back: "Making information mentioned, cited and correctly described in generative AI answers." },
+    { front: "ACO — Agentic Commerce Optimisation", back: "An extended concept for improving agent evaluation, shortlisting and transaction success; not yet a standard." },
+    { front: "KOL — Key Opinion Leader", back: "Influences consumers through expertise or reputation; can set the decision criteria consumers hand to agents." },
+    { front: "KOC — Key Opinion Consumer", back: "Influences peers through real usage; public, specific reviews become evidence agents check." },
+    { front: "Product Feed", back: "Product specs, prices and stock in a standard format, synced to search engines and e-commerce platforms." },
+    { front: "Structured Data (Schema)", back: "Describing products, prices and reviews in standard formats such as Schema.org so machines can read pages." },
+    { front: "AI Visibility Monitoring", back: "Asking major AI assistants a fixed set of scenario prompts to track mention rate, recommendation rate and accuracy." }
+  ],
+  m3_wrapup: "A seller's work comes down to four gates: be found, be chosen, be verified and be bought. The first three express the selection capability; the fourth expresses execution. GEO keeps the brand cited correctly in AI answers, KOLs set needs and criteria, and KOCs provide usage evidence. For small sellers, the best investment is not a new tool but correct, consistent, up-to-date product master data.",
+  m3_q: [
+    { q: "What is the correct order of the four seller gates?", opts: ["Verified → found → bought → chosen", "Found → chosen → verified → bought", "Bought → found → chosen → verified", "Chosen → verified → found → bought"], ans: _A1, exp: "Agents retrieve first, then filter and rank, then cross-check, and only then transact." },
+    { q: "According to Google's guidance, how should GEO be understood?", opts: ["A special technique separate from SEO", "You must add special schema to appear in AI answers", "Built on SEO basics, aiming to be mentioned, recommended and described correctly", "Simply buy ads"], ans: _A2, exp: "Google advises against special AEO/GEO tactics; GEO is a goal of content quality and citability." },
+    { q: "What is the biggest new influence of KOLs in agentic commerce?", opts: ["Paying on the consumer's behalf", "Providing discount codes", "Replacing product feeds", "Setting the decision criteria consumers hand to their agents"], ans: _A3, exp: "If a KOL stresses weight and warranty, consumers make them hard constraints for their agents." },
+    { q: "Why might affiliate links and discount codes lose power?", opts: ["Agents may compare prices and order through other channels", "Regulation bans affiliate marketing", "KOLs stop publishing", "Consumers stop shopping online"], ans: _A0, exp: "Agents compare by criteria and do not necessarily go through the KOL's link." },
+    { q: "Which of these harms the 'be verified' gate most?", opts: ["Consistent information across channels", "Third-party tests instead of adjectives", "Hiding instructions in pages telling AI to recommend you", "Public return policies"], ans: _A2, exp: "Hidden instructions are prompt injection; they get detected and reduce overall trust." },
+    { q: "What should a small seller do first?", opts: ["Build its own large language model", "Build correct, complete product master data consistent across channels", "Buy lots of sponsored KOL posts", "Develop its own protocol integration"], ans: _A1, exp: "Data quality decides whether agents can find, compare and verify your products." }
+  ],
+
+  // ===== M4 =====
+  m4_nav: "4. Ecosystem, Protocols & Platform Strategy", m4_title: "Ecosystem, Protocols & Platform Strategy",
+  m4_overview: "Agentic commerce needs new infrastructure: from demand and decision intermediation to discovery, interoperability, shared data and fulfilment. This module explains the six-layer ecosystem, how UCP, ACP, AP2 and MCP divide the work, and the shift in intermediary power.",
+  m4_highlights: ["Six-layer ecosystem", "UCP", "ACP", "AP2", "MCP", "Dis- and re-intermediation"],
+  m4_p1: "The agentic commerce ecosystem has six layers: demand and preference (brand, KOLs, KOCs, communities); decision intermediation (personal AI agents); discovery and evaluation (SEO, GEO, product data and reviews); commerce interoperability (APIs and protocols); shared data (PIM, CMS, CDP, knowledge bases); and execution and fulfilment (ERP, OMS, POS, CRM, payment and logistics) — with a governance layer (authorisation, privacy, security, audit and accountability) running across them. The layers are not a fixed tech stack; agents may also operate browsers or use merchants' existing APIs.",
+  m4_p2: "An API is an interface for systems to interact; a protocol defines the shared rules by which participants exchange data and operations.",
+  m4_p3: "UCP (Universal Commerce Protocol) was announced by Google in January 2026 and co-developed with Shopify, Etsy, Wayfair, Target, Walmart and others, covering discovery through purchase to after-sales. ACP (Agentic Commerce Protocol) was launched by OpenAI and Stripe in September 2025, covering product data, checkout and delegated payment. MCP (Model Context Protocol) gives AI applications a general way to connect to tools and data, but it is not a full transaction or payment protocol. Payment credentials should be handled by secure mechanisms and never handed directly to the model.",
+  m4_p4: "The payment layer has its own mechanisms. In September 2025 Google announced AP2 (Agent Payments Protocol) to prove that a user authorised an agent to make a specific purchase; it can extend A2A and UCP. Card networks have launched programmes such as Visa Intelligent Commerce and Mastercard Agent Pay, using tokenised credentials and spending limits so agents can pay on consumers' behalf. These complement UCP and ACP and are not necessarily mutually exclusive, but they do not guarantee that any agent can work with any merchant; check versions, regions and supported features first.",
+  m4_p5: "Intermediary power may shift partly from search engines and e-commerce platforms to personal agents — a process where disintermediation and reintermediation happen together. Firms can choose closed (own agent), open (accept third-party agents) or hybrid strategies. Even if e-commerce platforms lose some homepage traffic, they can still capture value through product supply, payment, logistics and fulfilment services.",
+  m4_terms: [
+    { front: "UCP — Universal Commerce Protocol", back: "An open standard led by Google and co-developed with retailers and e-commerce firms, covering discovery, purchase and after-sales." },
+    { front: "ACP — Agentic Commerce Protocol", back: "Launched by OpenAI and Stripe; specifies product data, checkout and delegated payment for agentic transactions." },
+    { front: "AP2 — Agent Payments Protocol", back: "Proves a user authorised an agent to make a specific purchase and supports secure payment." },
+    { front: "MCP", back: "Model Context Protocol: a general way for AI applications to connect to tools and data; not a full transaction protocol." },
+    { front: "API", back: "Application Programming Interface: the interface through which systems exchange data and operations." },
+    { front: "Dis- and Re-intermediation", back: "Old intermediaries (search, platforms) are partly bypassed while new ones (personal agents) emerge." },
+    { front: "Tokenisation", back: "Replacing real card numbers with tokens, combined with limits and conditions, so agents can pay safely." }
+  ],
+  m4_wrapup: "The infrastructure of agentic commerce is a six-layer ecosystem plus governance. UCP and ACP handle the commerce flow, AP2 and card-network programmes handle authorised payment, and MCP connects AI to tools and data; they divide the work rather than replace one another. A protocol existing does not mean it is widely available, so check real support before adopting. Market power is shifting partly, but platforms can still keep value through supply and fulfilment.",
+  m4_q: [
+    { q: "What is the role of MCP (Model Context Protocol)?", opts: ["A complete transaction and payment protocol", "A general way for AI applications to connect to tools and data", "A card network's agent payment programme", "Google's product feed format"], ans: _A1, exp: "MCP is a connection mechanism, not a full transaction or payment protocol." },
+    { q: "Who led the announcement of UCP?", opts: ["OpenAI and Stripe", "Visa", "Google, co-developed with Shopify, Etsy, Wayfair, Target, Walmart and others", "Mastercard"], ans: _A2, exp: "Google announced UCP in January 2026 at the National Retail Federation conference." },
+    { q: "What is AP2 mainly for?", opts: ["Proving a user authorised an agent's specific purchase and paying securely", "Managing product images", "Calculating RFM scores", "Monitoring social buzz"], ans: _A0, exp: "AP2 addresses authorisation, authenticity and accountability in payments." },
+    { q: "How should payment credentials be handled in agentic transactions?", opts: ["Given directly to the model to store", "Written on the web page for agents to read", "Handled by secure mechanisms, never handed directly to the model", "Kept by a KOL"], ans: _A2, exp: "Credentials should go through tokenisation and other secure mechanisms; models should not touch real credentials." },
+    { q: "Which statement about UCP and ACP is correct?", opts: ["They are mutually exclusive; pick one", "They are identical", "ACP is a sub-specification of UCP", "They are not necessarily exclusive, but do not guarantee any agent can work with any merchant"], ans: _A3, exp: "Before adopting, check versions, platform eligibility, regions and supported features." },
+    { q: "Even if e-commerce platforms lose homepage traffic, how can they still capture value?", opts: ["Through product supply, payment, logistics and fulfilment services", "Only through homepage ads", "By leaving the market", "By refusing to work with agents"], ans: _A0, exp: "This is reintermediation: from traffic gateway to fulfilment and service value." }
+  ],
+
+  // ===== M5 =====
+  m5_nav: "5. Marketing Frameworks Revisited", m5_title: "Marketing Frameworks Revisited",
+  m5_overview: "STP, personas, user journeys, the 4Ps, the marketing funnel and CRM have not lost their value, but their unit of analysis and practice need rebuilding. This module integrates them into a strategy design chain plus a measurement and customer management layer that runs throughout.",
+  m5_highlights: ["Design chain", "STP + delegation", "Delegation profile", "Service blueprint", "Dual-track funnel KPIs", "CRM and RFM"],
+  m5_p1: "The design chain moves in order: market research → STP → persona → journey → 4Ps → execution (website, SEO/GEO, social, APIs and protocols). Alongside it, the funnel and CRM form a parallel measurement and customer management layer: the funnel measures conversion and drop-off at each stage, and CRM manages relationships and value after the sale. Together they feed back into market research and the 4Ps.",
+  m5_p2: "The funnel and CRM are not the last step of the process; they are a parallel layer that runs through the entire journey.",
+  m5_p3: "STP adds segmentation variables such as task standardisation, purchase frequency, risk, delegation level and agent-channel use; positioning must make differentiation understandable, comparable and verifiable by agents. Personas should not invent a Bot Persona with feelings and demographics; instead, add a Delegation Profile: task goals, hard constraints, trade-off preferences, trusted sources, decision rights (may search, recommend, order, payment limit) and exception handling.",
+  m5_p4: "Journeys should be drawn as dual tracks for humans and agents, using a service blueprint to link front stage and back stage and to mark handoffs and exceptions. Experience design extends from UI/UX to agent experience (AX): readable data, usable tools, recoverable errors and controllable permissions. In the 4Ps, products must be verifiable, prices live and transparent, place must cover agent ecosystems, and promotion must both create human demand and provide credible content.",
+  m5_p5: "Funnel metrics add AI mention rate, recommendation rate, shortlist inclusion rate, authorisation completion rate and transaction success rate, with consistent denominators — never mix AI test answers with real orders. CRM uses RFM to assess customer value: R recency, F frequency, M monetary value. Agent auto-replenishment can push R and F up, and price comparison can push unit prices down, so calculate by channel and use margin. Reinartz and Kumar's research also warns that relationship length correlates only weakly to moderately with profit; a high RFM score does not equal loyalty.",
+  m5_terms: [
+    { front: "STP", back: "Segmentation, Targeting, Positioning; agentic settings add variables such as delegation level." },
+    { front: "Delegation Profile", back: "Records task goals, hard constraints, preference weights, trusted sources, decision rights and exceptions — not an invented bot personality." },
+    { front: "Service Blueprint", back: "Links customer-facing touchpoints with back-stage processes and marks handoffs and exceptions." },
+    { front: "Agent Experience (AX)", back: "Readable data, usable tools, recoverable errors and controllable permissions for agents." },
+    { front: "Shortlist Inclusion Rate", back: "Scenarios where the brand is shortlisted ÷ valid scenarios that produced a shortlist." },
+    { front: "RFM", back: "R recency, F frequency, M monetary value — a segmentation model for customer value." },
+    { front: "CLV — Customer Lifetime Value", back: "The margin a customer is expected to contribute over the whole relationship." }
+  ],
+  m5_wrapup: "Classic marketing tools are not made obsolete by AI; they become the basic methods for managing AI-mediated markets. The design chain moves from STP to execution, while the measurement and customer management layer runs throughout. The key additions are delegation levels, delegation profiles, dual-track journeys and agent experience, and funnels measured with consistent denominators; CRM should read RFM by channel so that automatic agent behaviour is not mistaken for brand loyalty.",
+  m5_q: [
+    { q: "In the rebuilt approach, what is the role of the funnel and CRM?", opts: ["The last step of the design chain", "A parallel measurement and customer management layer running through the journey", "Old tools that can be dropped", "Used only after the sale"], ans: _A1, exp: "The funnel measures stage conversion and CRM manages customer value; both run in parallel throughout." },
+    { q: "How does a Delegation Profile differ from a Bot Persona?", opts: ["It records task goals, constraints, authority and exceptions without inventing feelings or demographics for the agent", "It gives the agent a gender and age", "They are the same", "It is only for corporate buying"], ans: _A0, exp: "The agent is a decision intermediary, not a segment with its own consumption needs." },
+    { q: "Which segmentation variables does agentic commerce add to STP?", opts: ["Age and income only", "Geography only", "Delegation level, task standardisation and agent-channel use", "Brand colour preference"], ans: _A2, exp: "People in the same demographic group may delegate differently." },
+    { q: "How is the shortlist inclusion rate calculated?", opts: ["Scenarios where the brand is shortlisted ÷ valid scenarios with a shortlist", "Site visits ÷ ad impressions", "Orders ÷ site visits", "Reviews ÷ products"], ans: _A0, exp: "The denominator must be valid, comparable test scenarios." },
+    { q: "How does agent auto-replenishment affect RFM?", opts: ["It lowers R and F", "It may push R and F up without reflecting brand preference", "It has nothing to do with RFM", "It only affects M"], ans: _A1, exp: "Separate human-initiated purchases from automatic agent purchases." },
+    { q: "What does Reinartz and Kumar's research imply for customer value management?", opts: ["Longer relationships are always more profitable", "Look at revenue, not margin", "Loyalty is just repeat-purchase count", "Relationship length correlates only weakly to moderately with profit; high RFM is not loyalty"], ans: _A3, exp: "Loyalty needs both attitude and behaviour, measured with margin." }
+  ],
+
+  // ===== M6 =====
+  m6_nav: "6. Tools, Organisation, Roadmap & Governance", m6_title: "Tools, Organisation, Roadmap & Governance",
+  m6_overview: "Putting strategy into practice needs matching AI and digital tools, cross-functional organisational design, a phased roadmap and risk governance. This module covers the seven-layer tool stack, five aspects of organisational change, a three-phase roadmap and decision gates G1–G4.",
+  m6_highlights: ["Seven-layer tool stack", "Data before tools", "Agentic commerce squad", "Data owners", "Decision gates G1–G4", "Risk governance"],
+  m6_p1: "Tools follow seven layers: demand and preference (social listening, generative content, influencer management); discovery and evaluation (site search diagnostics, structured data, feed management, AI visibility monitoring, review management); firm agents (agent platforms, marketing automation, AI service agents); commerce interoperability (API gateways, UCP/ACP, AP2, MCP); shared data (PIM, CMS, CDP, knowledge base and RAG, data warehouse); execution and fulfilment (ERP, OMS, POS, CRM, payment and fraud detection, logistics); and measurement and governance (web analytics, BI, A/B testing, MMM, consent management, audit logs).",
+  m6_p2: "Data before tools: one correct, complete product master data set that is consistent across channels beats any newly adopted AI tool.",
+  m6_p3: "Agentic commerce is not a project the marketing department can finish alone. Structure shifts from separate functions to a cross-functional agentic commerce squad; decision rights shift from approving every activity by hand to humans setting goals and guardrails, agents acting within them, and exceptions going to humans; product and customer data are treated as data products with clear data owners; KPIs add shortlist rate, transaction success and RFM/CLV by channel; and culture becomes experiment- and evidence-driven while keeping brand and ethical judgement.",
+  m6_p4: "The roadmap has three phases: 0–3 months for agent-ready information (data audit, baseline KPIs, AI visibility tests); 3–12 months for agent-ready commerce (APIs, authorisation and exception tests, a single-channel pilot); 12–24 months for an agentic business model (wider interoperability, evaluating an own agent, governance audits). Four decision gates guard each phase: G1, is data correct and complete; G2, is agent-channel demand measurable; G3, are authorisation and payment risk controls in place; G4, does incremental margin cover the cost. If G3 fails, autonomous transactions must not be enabled.",
+  m6_p5: "Major risks include wrong agent recommendations, stale prices and stock, prompt injection, unauthorised transactions, payment fraud, privacy, conflicts of commercial interest and customer relationships being intermediated. Controls include authoritative data with timestamps, real-time re-confirmation before transactions, separating instructions from data, spending limits and confirmation gates, data minimisation, and disclosure of ads and commissions. Overall, the logic of competition is extending from the attention economy and the recommendation economy to the delegation economy: be trusted by humans, and be chosen by authorised agents.",
+  m6_terms: [
+    { front: "CDP — Customer Data Platform", back: "Integrates online and store customer data into a single customer view." },
+    { front: "PIM — Product Information Management", back: "Centrally manages product specs, images and descriptions so every channel stays consistent." },
+    { front: "OMS — Order Management System", back: "Manages cross-channel orders and stock allocation, supporting buy-online-pick-up-in-store." },
+    { front: "RAG — Retrieval-Augmented Generation", back: "AI retrieves authoritative documents before answering; live prices and stock should still come from operating systems." },
+    { front: "Data Owner", back: "The role that treats product or customer data as a data product and is accountable for its accuracy, updates and access." },
+    { front: "Prompt Injection", back: "Hidden instructions in external content that try to steer AI; treat external content as untrusted data and minimise tool permissions." },
+    { front: "Delegation Economy", back: "The competitive goal: be trusted by humans and be chosen by authorised agents." }
+  ],
+  m6_wrapup: "Turning strategy into practice needs tools, organisation and pace working together. Choose tools along the seven layers, but put data before tools; move from separate functions to a cross-functional squad and give every data set an owner; advance in three phases guarded by gates G1–G4, and do not enable autonomous transactions until authorisation and risk controls are ready. Digital marketing thus extends from managing traffic to creating demand, mediating decisions, enabling commerce and managing customer value.",
+  m6_q: [
+    { q: "What is the main function of a CDP?", opts: ["Managing product specs", "Integrating online and store data into a single customer view", "Running store checkouts", "Producing videos"], ans: _A1, exp: "A CDP is a precondition for OMO and for CRM to assess customer value correctly." },
+    { q: "Where should live prices and stock come from?", opts: ["Authoritative operating systems such as ERP and OMS", "Old data in a vector index", "Social media posts", "KOL videos"], ans: _A0, exp: "RAG suits knowledge content; live data should come straight from operating systems." },
+    { q: "If decision gate G3 fails, what should happen?", opts: ["Enable autonomous transactions anyway", "Do not enable autonomous transactions", "Expand to every channel", "Stop all data work"], ans: _A1, exp: "G3 checks authorisation, payment risk control and exception handling." },
+    { q: "What does a 'data owner' mean?", opts: ["Treating product and customer data as data products with clear owners", "One IT person manages everything", "Data needs no maintenance", "An outsourcer decides everything"], ans: _A0, exp: "Data that nobody owns is one of the most common causes of failure." },
+    { q: "What controls address prompt injection?", opts: ["Let agents follow every instruction on web pages", "Widen tool permissions", "Treat external content as untrusted data, separate instructions from data, minimise tool permissions", "Shut down all websites"], ans: _A2, exp: "External content is data, not instructions." },
+    { q: "What is the competitive goal of the delegation economy?", opts: ["Be seen by humans", "Be recommended by algorithms", "Cut all prices", "Be trusted by humans and chosen by authorised agents"], ans: _A3, exp: "The attention, recommendation and delegation logics will coexist for a long time." }
+  ],
+
+  // ===== Lab / Resources =====
+  mlab_nav: "7. Interactive Lab", mlab_title: "Interactive Lab", mlab_desc: "Five interactive tools let you apply the module concepts to real situations: judge delegation levels, audit the seller gates, diagnose the funnel, calculate RFM and assess the transformation gates.",
+  mlab_labs: [
+    { title: "Lab 1: Delegation Level Estimator", desc: "Adjust product characteristics to estimate the most likely delegation level H0–H3 and the seller's focus." },
+    { title: "Lab 2: Seller Gate Self-audit", desc: "Tick what you have done and find your weakest gate among found, chosen, verified and bought." },
+    { title: "Lab 3: Dual-track Funnel Diagnosis", desc: "Enter scenario-test and transaction numbers to calculate stage rates and find the biggest drop-off." },
+    { title: "Lab 4: RFM Customer Value Calculator", desc: "Enter recency, frequency and monetary value to calculate RFM scores and customer types." },
+    { title: "Lab 5: Transformation Decision Gates", desc: "Check G1–G4 one by one to judge how far the firm can advance." }
+  ],
+  mres_nav: "8. Learning Resources", mres_title: "Learning Resources", mres_desc: "Official documents, news reports and academic sources cited in this course, for further reading. Documents are updated over time, so check the version and scope when citing.",
+  mres_groups: [
+    { title: "Commerce Protocols & Agent Payments", links: [
+      { label: "Google UCP Guide", url: "https://developers.google.com/merchant/ucp", desc: "Google's merchant guide to the Universal Commerce Protocol." },
+      { label: "UCP Overview (Google Pay)", url: "https://developers.google.com/pay/api/universal-commerce-protocol/overview", desc: "UCP overview and the role of Google Pay credentials." },
+      { label: "Google: Agentic commerce tools & UCP", url: "https://blog.google/products/ads-commerce/agentic-commerce-ai-tools-protocol-retailers-platforms", desc: "Google's official blog post announcing UCP." },
+      { label: "Agentic Commerce Protocol: Key Concepts", url: "https://agentic-commerce-protocol.com/docs/commerce/guides/key-concepts", desc: "ACP core concepts: product data, checkout and delegated payment." },
+      { label: "Stripe & OpenAI: Instant Checkout and ACP", url: "https://stripe.com/newsroom/news/stripe-openai-instant-checkout", desc: "Stripe's ACP announcement, 29 September 2025." },
+      { label: "Google Cloud: Agent Payments Protocol (AP2)", url: "https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol", desc: "AP2 announcement, 16 September 2025." },
+      { label: "AP2 Protocol Site", url: "https://ap2-protocol.org/", desc: "AP2 specification, documents and versions." }
+    ]},
+    { title: "Search, GEO & Primers", links: [
+      { label: "Google: AI Features and Your Website", url: "https://developers.google.com/search/docs/appearance/ai-features", desc: "How AI Overviews and AI Mode relate to websites." },
+      { label: "Google: Optimizing for Generative AI Features", url: "https://developers.google.com/search/docs/fundamentals/ai-optimization-guide", desc: "Google's official position on optimising for generative AI search." },
+      { label: "Stripe: Agentic Commerce Primer", url: "https://stripe.com/guides/agentic-commerce-primer", desc: "A getting-started guide to agentic commerce." }
+    ]},
+    { title: "Payment Networks & Industry News", links: [
+      { label: "Visa: Intelligent Commerce Connect", url: "https://corporate.visa.com/en/sites/visa-perspectives/newsroom/visa-intelligent-commerce-connect-ai-shopping-for-businesses.html", desc: "Visa's agentic commerce integration press release, 8 April 2026." },
+      { label: "American Banker: Agentic payments", url: "https://www.americanbanker.com/payments/news/visa-mastercard-launch-payments-for-agentic-ai", desc: "Coverage of Visa and Mastercard Agent Pay." }
+    ]},
+    { title: "Decision Models & Customer Value", links: [
+      { label: "Dentsu: AISAS model", url: "https://dentsu-ho.com/en/articles/3100", desc: "Dentsu on the origin and evolution of the AISAS model." },
+      { label: "HBS Working Knowledge: The Mismanagement of Customer Loyalty", url: "https://hbswk.hbs.edu/archive/the-mismanagement-of-customer-loyalty-not-all-customers-are-created-equal", desc: "Summary of Reinartz and Kumar's research on loyalty and profit." }
+    ]}
+  ],
+  mana_nav: "9. Learning Analytics",
+
+  date: "Version 2026.11.24", copyright: "For Educational Use Only",
+  architect_label: "Architect:", architect_name: "Prof. Shihmin Lo",
+  architect_url: "https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo"
+};
+const { useState, useEffect, useRef } = React;
+const NUM_LEARN = 6;
+const TOTAL = 1 + NUM_LEARN + 3;
+const IDX_LAB = NUM_LEARN + 1;
+const IDX_RES = NUM_LEARN + 2;
+const IDX_ANA = NUM_LEARN + 3;
+const ICONS = ["🧭", "🌐", "🔀", "🚪", "🔗", "🧩", "🏗️", "🧪", "🌍", "📊"];
+const toast = () => { if (window.__amcToast) window.__amcToast(); };
+const noCtx = (e) => { e.preventDefault(); toast(); };
+
+/* ---------------- Icons ---------------- */
+const Ico = ({ size = 20, className = "", children }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">{children}</svg>
+);
+const IconBookOpen = (p) => <Ico {...p}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></Ico>;
+const IconAlertTriangle = (p) => <Ico {...p}><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></Ico>;
+const IconCheckCircle = (p) => <Ico {...p}><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><polyline points="22 4 12 14 9 11"/></Ico>;
+const IconGlobe = (p) => <Ico {...p}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></Ico>;
+const IconChevronRight = (p) => <Ico {...p}><polyline points="9 18 15 12 9 6"/></Ico>;
+const IconChevronUp = (p) => <Ico {...p}><polyline points="18 15 12 9 6 15"/></Ico>;
+const IconMenu = (p) => <Ico {...p}><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></Ico>;
+const IconX = (p) => <Ico {...p}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></Ico>;
+const IconMoon = (p) => <Ico {...p}><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></Ico>;
+const IconSun = (p) => <Ico {...p}><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></Ico>;
+const IconPlay = (p) => <Ico {...p}><polygon points="5 3 19 12 5 21 5 3"/></Ico>;
+const IconPause = (p) => <Ico {...p}><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></Ico>;
+const IconSquare = (p) => <Ico {...p}><rect x="4" y="4" width="16" height="16" rx="2"/></Ico>;
+const IconArrowRight = (p) => <Ico {...p}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></Ico>;
+const IconActivity = (p) => <Ico {...p}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></Ico>;
+const IconCpu = (p) => <Ico {...p}><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/></Ico>;
+const IconTrendingUp = (p) => <Ico {...p}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></Ico>;
+const IconLayers = (p) => <Ico {...p}><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></Ico>;
+const IconFlag = (p) => <Ico {...p}><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></Ico>;
+const IconZap = (p) => <Ico {...p}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></Ico>;
+const IconFlask = (p) => <Ico {...p}><path d="M9 2h6"/><path d="M10 2v7L4 20a1 1 0 0 0 1 2h14a1 1 0 0 0 1-2l-6-11V2"/></Ico>;
+const IconZapLab = (p) => <Ico {...p}><path d="M9 2h6"/><path d="M10 2v7L4 20a1 1 0 0 0 1 2h14a1 1 0 0 0 1-2l-6-11V2"/><polyline points="13 12 11 15 13 15 11 18"/></Ico>;
+const IconHome = (p) => <Ico {...p}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></Ico>;
+const sideIcon = (id) => id === IDX_LAB ? <IconZapLab size={16}/> : id === IDX_RES ? <IconGlobe size={16}/> : id === IDX_ANA ? <IconActivity size={16}/> : <span>{ICONS[id]}</span>;
+
+/* ---------------- SVG helpers ---------------- */
+const C = {
+  g: "fill-[#004030] dark:fill-[#D8C3A5]", onG: "fill-white dark:fill-[#004030]",
+  gold: "fill-[#8A6D3B]", onGold: "fill-white",
+  lg: "fill-[#EEF3F0] dark:fill-slate-700", lgold: "fill-[#F7F1E8] dark:fill-[#3b3428]", white: "fill-white dark:fill-slate-800",
+  st: "stroke-slate-300 dark:stroke-slate-600", stG: "stroke-[#004030] dark:stroke-[#D8C3A5]", stGold: "stroke-[#8A6D3B] dark:stroke-[#D8C3A5]",
+  tx: "fill-slate-700 dark:fill-slate-200", sub: "fill-slate-500 dark:fill-slate-400", acc: "fill-[#004030] dark:fill-[#D8C3A5]", accGold: "fill-[#8A6D3B] dark:fill-[#D8C3A5]"
+};
+const R = ({ x, y, w, h, c = C.lg, s = C.st, r = 10, sw = 1.5 }) => <rect x={x} y={y} width={w} height={h} rx={r} className={`${c} ${s}`} strokeWidth={sw} />;
+const T = ({ x, y, children, c = C.tx, size = 14, w = 500, a = "middle" }) => <text x={x} y={y} className={c} fontSize={size} fontWeight={w} textAnchor={a}>{children}</text>;
+const Defs = ({ id }) => (
+  <defs><marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" className={C.g} /></marker></defs>
+);
+const Arrow = ({ d, id, dash }) => <path d={d} fill="none" className={C.stG} strokeWidth="2.2" strokeDasharray={dash ? "6 5" : undefined} markerEnd={`url(#${id})`} />;
+const Figure = ({ children, vb, label }) => (
+  <figure className="w-full my-2">
+    <div className="w-full bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-3 sm:p-5 ui-decoration" onContextMenu={noCtx}>
+      <svg viewBox={vb} className="w-full h-auto" draggable="false" role="img" aria-label={label} style={{ fontFamily: "Inter, 'Noto Sans TC', 'Microsoft JhengHei', sans-serif" }}>{children}</svg>
+    </div>
+    {label && <figcaption className="text-xs text-center text-slate-500 dark:text-slate-400 mt-2">{label}</figcaption>}
+  </figure>
+);
+
+const SvgM0 = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e; const id = "a0";
+  const caps = [[L("說服", "Persuasion"), L("對人類", "For humans")], [L("入選", "Selection"), L("對代理人", "For agents")], [L("執行", "Execution"), L("對交易", "For transactions")]];
+  const gates = [L("找得到", "Found"), L("好選擇", "Chosen"), L("好驗證", "Verified"), L("買得成", "Bought")];
+  const en = [L("協定與支付", "Protocols & payment"), L("工具堆疊", "Tool stack"), L("組織與路線圖", "Org & roadmap")];
+  return (
+    <Figure vb="0 0 800 300" label={L("課程架構：需求端改變 → 企業能力 → 賣家四關 → 支撐條件", "Course map: demand shift → firm capabilities → seller gates → enablers")}>
+      <Defs id={id} />
+      <R x={10} y={110} w={150} h={80} c={C.g} s="" r={12} />
+      <T x={85} y={145} c={C.onG} size={16} w={700}>{L("需求端委託化", "Demand-side")}</T>
+      <T x={85} y={168} c={C.onG} size={13}>{L("H0–H3", "delegation H0–H3")}</T>
+      <Arrow id={id} d="M162,150 L196,150" />
+      {caps.map((c, i) => (<g key={i}><R x={200} y={20 + i * 92} w={170} h={78} c={i === 1 ? C.lgold : C.lg} s={i === 1 ? C.stGold : C.st} /><T x={285} y={55 + i * 92} c={i === 1 ? C.accGold : C.acc} size={17} w={700}>{c[0]}</T><T x={285} y={78 + i * 92} c={C.sub} size={12}>{c[1]}</T></g>))}
+      <Arrow id={id} d="M372,150 L406,150" />
+      {gates.map((g, i) => (<g key={i}><R x={410} y={20 + i * 68} w={160} h={56} c={C.lgold} s={C.stGold} /><T x={490} y={54 + i * 68} c={C.accGold} size={15} w={700}>{`${i + 1}  ${g}`}</T></g>))}
+      <Arrow id={id} d="M572,150 L606,150" />
+      {en.map((g, i) => (<g key={i}><R x={610} y={30 + i * 85} w={180} h={70} c={C.white} s={C.stG} /><T x={700} y={71 + i * 85} c={C.acc} size={14} w={700}>{g}</T></g>))}
+    </Figure>
+  );
+};
+
+const SvgM1 = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e; const id = "a1";
+  const lv = [["H0", L("人類自行決策", "Human decides")], ["H1", L("代理協助探索", "Agent assists")], ["H2", L("代理推薦、人確認", "Agent recommends")], ["H3", L("授權內代為交易", "Agent transacts")]];
+  return (
+    <Figure vb="0 0 800 330" label={L("圖 1　需求端委託化與供給端回應", "Figure 1  Demand-side delegation and the supply-side response")}>
+      <Defs id={id} />
+      <R x={10} y={10} w={370} h={310} c={C.lg} s={C.stG} r={14} />
+      <T x={195} y={42} c={C.acc} size={18} w={700}>{L("需求端：消費者委託代理人", "Demand side: consumers delegate")}</T>
+      {lv.map((l, i) => (<g key={i}><R x={30} y={65 + i * 62} w={330} h={50} c={C.white} s={C.st} r={8} /><rect x={30} y={65 + i * 62} width={60} height={50} rx={8} className={C.g} opacity={0.4 + i * 0.2} /><T x={60} y={96 + i * 62} c={i > 1 ? C.onG : C.acc} size={16} w={800}>{l[0]}</T><T x={105} y={96 + i * 62} a="start" size={15}>{l[1]}</T></g>))}
+      <Arrow id={id} d="M384,165 L416,165" />
+      <R x={420} y={10} w={370} h={310} c={C.lgold} s={C.stGold} r={14} />
+      <T x={605} y={42} c={C.accGold} size={18} w={700}>{L("供給端：同時服務兩種顧客", "Supply side: serve two customers")}</T>
+      <R x={440} y={65} w={330} h={95} c={C.white} s={C.st} />
+      <T x={605} y={100} c={C.acc} size={17} w={700}>{L("人類", "Humans")}</T>
+      <T x={605} y={128} size={14}>{L("看得到・被打動・願信任", "Seen · persuaded · trusted")}</T>
+      <R x={440} y={175} w={330} h={95} c={C.white} s={C.st} />
+      <T x={605} y={210} c={C.accGold} size={17} w={700}>{L("代理人", "Agents")}</T>
+      <T x={605} y={238} size={14}>{L("讀得到・驗證得了・交易得了", "Readable · verifiable · transactable")}</T>
+      <T x={605} y={302} c={C.sub} size={13}>{L("利益不必然一致 → 策略張力", "Interests may differ → strategic tension")}</T>
+    </Figure>
+  );
+};
+
+const SvgM2 = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e;
+  const rows = [["Attention", "Attention", L("需求與認知", "Awareness"), 1], ["Interest", "Interest", L("探索", "Discovery"), 2], ["Desire", "Search", L("篩選＋考慮", "Qualify + Consider"), 3], ["Action", "Action", L("授權＋交易", "Authorize + Transact"), 2], ["—", "Share", L("維繫＋證據回流", "Retention + Evidence"), 0]];
+  const cols = [[10, 170, "AIDA"], [190, 170, "AISAS"], [370, 250, L("雙軌決策漏斗", "Dual-track funnel")], [630, 160, L("代理人介入", "Agent role")]];
+  return (
+    <Figure vb="0 0 800 370" label={L("圖 2　三種決策模型對照與代理人介入程度", "Figure 2  Three decision models and agent involvement")}>
+      {cols.map((c, i) => (<g key={i}><rect x={c[0]} y={10} width={c[1]} height={44} rx={8} className={i === 2 ? C.gold : C.g} /><T x={c[0] + c[1] / 2} y={38} c={i === 2 ? C.onGold : C.onG} size={15} w={700}>{c[2]}</T></g>))}
+      {rows.map((r, i) => { const y = 64 + i * 60; const hi = i === 2; return (
+        <g key={i}>
+          <R x={10} y={y} w={780} h={52} c={hi ? C.lgold : (i % 2 ? C.white : C.lg)} s={hi ? C.stGold : C.st} sw={hi ? 2.2 : 1} r={8} />
+          <T x={95} y={y + 32} size={15} w={600}>{r[0]}</T>
+          <T x={275} y={y + 32} size={15} w={hi ? 800 : 600} c={hi ? C.accGold : C.tx}>{r[1]}</T>
+          <T x={495} y={y + 32} size={15} w={hi ? 800 : 600} c={hi ? C.accGold : C.tx}>{r[2]}</T>
+          {r[3] > 0 ? [0, 1, 2].map(d => <circle key={d} cx={680 + d * 30} cy={y + 26} r={9} className={`${d < r[3] ? C.g : C.white} ${C.stG}`} strokeWidth="2" />) : <T x={710} y={y + 32} c={C.accGold} size={14} w={700}>{L("↺ 證據", "↺ Evidence")}</T>}
+        </g>); })}
+    </Figure>
+  );
+};
+
+const SvgM3 = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e; const id = "a3";
+  const st = [L("需求形成", "Demand"), L("1 找得到", "1 Found"), L("2 好選擇", "2 Chosen"), L("3 好驗證", "3 Verified"), L("4 買得成", "4 Bought"), L("分享回流", "Share")];
+  const roles = [["GEO", [0, 2, 1, 2, 0, 1]], ["KOL", [2, 1, 1, 2, 0, 1]], ["KOC", [1, 1, 1, 2, 0, 2]]];
+  const x0 = 120, cw = 110;
+  return (
+    <Figure vb="0 0 800 330" label={L("圖 3　賣家四關與 GEO／KOL／KOC 的作用強度（實心＝關鍵、半實心＝輔助、空心＝作用小）", "Figure 3  Seller gates and the role of GEO / KOL / KOC (solid = key, half = support, hollow = minor)")}>
+      <Defs id={id} />
+      {st.map((s, i) => { const gate = i >= 1 && i <= 4; const x = x0 + i * cw; return (<g key={i}><R x={x} y={20} w={cw - 12} h={52} c={gate ? C.lgold : C.lg} s={gate ? C.stGold : C.st} r={8} /><T x={x + (cw - 12) / 2} y={52} c={gate ? C.accGold : C.acc} size={14} w={700}>{s}</T>{i < 5 && <Arrow id={id} d={`M${x + cw - 12},46 L${x + cw - 2},46`} />}</g>); })}
+      {roles.map((r, ri) => { const y = 95 + ri * 70; return (<g key={ri}>
+        <rect x={10} y={y} width={100} height={56} rx={8} className={C.g} /><T x={60} y={y + 34} c={C.onG} size={17} w={800}>{r[0]}</T>
+        {r[1].map((v, i) => { const cx = x0 + i * cw + (cw - 12) / 2; return (<g key={i}><R x={x0 + i * cw} y={y} w={cw - 12} h={56} c={C.white} s={C.st} r={8} />
+          <circle cx={cx} cy={y + 28} r={13} className={`${v === 2 ? C.g : C.white} ${C.stG}`} strokeWidth="2.2" />
+          {v === 1 && <path d={`M${cx},${y + 15} A13,13 0 0 1 ${cx},${y + 41} Z`} className={C.g} />}
+        </g>); })}
+      </g>); })}
+      <T x={400} y={318} c={C.sub} size={13}>{L("KOL 塑造條件・KOC 提供證據・GEO 確保被正確引用", "KOL shapes criteria · KOC supplies evidence · GEO keeps AI answers accurate")}</T>
+    </Figure>
+  );
+};
+
+const SvgM4 = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e;
+  const layers = [[L("需求與偏好層", "Demand & preference"), L("品牌・KOL・KOC・社群", "Brand · KOL · KOC · community")], [L("決策中介層", "Decision intermediation"), L("個人 AI 代理人", "Personal AI agent")], [L("探索與評估層", "Discovery & evaluation"), "SEO · GEO · " + L("商品資料・評論", "product data · reviews")], [L("商務互通層", "Interoperability"), "API · UCP · ACP · AP2 · MCP"], [L("共享資料層", "Shared data"), "PIM · CMS · CDP · " + L("知識庫", "knowledge base")], [L("執行與履約層", "Execution & fulfilment"), "ERP · OMS · POS · CRM · " + L("支付・物流", "payment · logistics")]];
+  return (
+    <Figure vb="0 0 800 400" label={L("圖 4　代理式商務六層生態系與治理層", "Figure 4  Six-layer agentic commerce ecosystem with governance")}>
+      {layers.map((l, i) => { const y = 10 + i * 64; const hi = i === 3; return (<g key={i}>
+        <rect x={10} y={y} width={220} height={56} rx={8} className={hi ? C.gold : C.g} /><T x={120} y={y + 34} c={hi ? C.onGold : C.onG} size={15} w={700}>{l[0]}</T>
+        <R x={238} y={y} w={452} h={56} c={hi ? C.lgold : C.lg} s={hi ? C.stGold : C.st} r={8} /><T x={464} y={y + 34} size={15} w={hi ? 700 : 500} c={hi ? C.accGold : C.tx}>{l[1]}</T>
+      </g>); })}
+      <R x={700} y={10} w={90} h={376} c={C.white} s={C.stG} r={10} sw={2} />
+      {L("治理層", "Gover-nance").split("-").map((s, i) => <T key={i} x={745} y={170 + i * 22} c={C.acc} size={15} w={800}>{s}</T>)}
+      <T x={745} y={230} c={C.sub} size={11}>{L("授權", "auth")}</T><T x={745} y={248} c={C.sub} size={11}>{L("隱私", "privacy")}</T><T x={745} y={266} c={C.sub} size={11}>{L("稽核", "audit")}</T>
+    </Figure>
+  );
+};
+
+const SvgM5 = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e; const id = "a5";
+  const chain = [["Research", L("市場研究", "Research")], ["STP", L("區隔定位", "Segment")], ["Persona", L("＋委託設定", "+ delegation")], ["Journey", L("雙軌旅程", "Dual-track")], ["4Ps", L("價值供給", "Offer")], ["Execute", L("網站・API", "Web · API")]];
+  const band = [["Funnel / KPI", L("分段衡量", "Stage metrics")], ["CRM", L("顧客關係", "Relationships")], ["RFM", L("R 最近・F 最常・M 最多", "Recency · Freq. · Money")], ["CLV", L("終身價值", "Lifetime value")]];
+  return (
+    <Figure vb="0 0 800 330" label={L("圖 5　策略設計鏈與平行的衡量與顧客經營層", "Figure 5  Strategy design chain and the parallel measurement & customer layer")}>
+      <Defs id={id} />
+      {chain.map((c, i) => { const x = 40 + i * 127; return (<g key={i}><R x={x} y={20} w={112} h={66} c={i % 2 ? C.lgold : C.lg} s={C.st} r={8} /><T x={x + 56} y={48} c={i % 2 ? C.accGold : C.acc} size={15} w={800}>{c[0]}</T><T x={x + 56} y={70} size={11}>{c[1]}</T>{i < 5 && <Arrow id={id} d={`M${x + 112},53 L${x + 125},53`} />}{i >= 2 && <line x1={x + 56} y1={88} x2={x + 56} y2={146} className={C.stGold} strokeWidth="1.5" strokeDasharray="5 5" />}</g>); })}
+      <R x={40} y={150} w={750} h={150} c={C.lgold} s={C.stGold} r={12} sw={2} />
+      <T x={60} y={178} a="start" c={C.accGold} size={15} w={800}>{L("衡量與顧客經營層（平行、貫穿全程）", "Measurement & customer layer (parallel, throughout)")}</T>
+      {band.map((b, i) => { const x = 58 + i * 182; return (<g key={i}><R x={x} y={194} w={170} h={90} c={C.white} s={C.st} r={8} /><T x={x + 85} y={230} c={C.acc} size={16} w={800}>{b[0]}</T><T x={x + 85} y={258} size={12}>{b[1]}</T></g>); })}
+      <Arrow id={id} dash d="M40,250 L18,250 L18,53 L36,53" />
+    </Figure>
+  );
+};
+
+const SvgM6 = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e; const id = "a6";
+  const ph = [[L("0–3 個月", "0–3 months"), L("資訊就緒", "Agent-ready info")], [L("3–12 個月", "3–12 months"), L("商務就緒", "Agent-ready commerce")], [L("12–24 個月", "12–24 months"), L("商業模式", "Business model")]];
+  const gates = [["G1", L("資料", "Data")], ["G2", L("需求", "Demand")], ["G3", L("授權", "Auth.")], ["G4", L("毛利", "Margin")]];
+  return (
+    <Figure vb="0 0 800 260" label={L("圖 6　三階段轉型路線圖與 G1–G4 決策關卡", "Figure 6  Three-phase roadmap with decision gates G1–G4")}>
+      <Defs id={id} />
+      {ph.map((p, i) => { const x = 20 + i * 265; return (<g key={i}><R x={x} y={20} w={230} h={100} c={C.white} s={C.stG} r={12} sw={2} /><rect x={x} y={20} width={230} height={34} rx={12} className={C.g} /><T x={x + 115} y={43} c={C.onG} size={15} w={700}>{p[0]}</T><T x={x + 115} y={92} c={C.acc} size={17} w={800}>{p[1]}</T>{i < 2 && <Arrow id={id} d={`M${x + 232},70 L${x + 262},70`} />}</g>); })}
+      {gates.map((g, i) => { const cx = 110 + i * 193; return (<g key={i}><polygon points={`${cx},150 ${cx + 38},185 ${cx},220 ${cx - 38},185`} className={`${C.lgold} ${C.stGold}`} strokeWidth="2" /><T x={cx} y={182} c={C.accGold} size={15} w={800}>{g[0]}</T><T x={cx} y={202} size={12}>{g[1]}</T></g>); })}
+      <T x={400} y={250} c={C.sub} size={13}>{L("G3 未通過：不得啟用自主交易", "If G3 fails: no autonomous transactions")}</T>
+    </Figure>
+  );
+};
+const MODULE_SVGS = [SvgM0, SvgM1, SvgM2, SvgM3, SvgM4, SvgM5, SvgM6];
+
+/* ---------------- Learning components ---------------- */
+const FlipCardDeck = ({ terms, t, moduleId, onCardRead }) => {
+  const [groupIdx, setGroupIdx] = useState(0);
+  const [flipped, setFlipped] = useState({});
+  const [readSet, setReadSet] = useState(new Set());
+  const [shownSet, setShownSet] = useState(new Set());
+  const [shuffledOrder] = useState(() => [...Array(terms.length).keys()].sort(() => Math.random() - 0.5));
+  const groupSize = 2;
+  const totalGroups = Math.ceil(terms.length / groupSize);
+  const currentCardIndices = shuffledOrder.slice(groupIdx * groupSize, groupIdx * groupSize + groupSize);
+  useEffect(() => {
+    setShownSet(prev => { const n = new Set(prev); currentCardIndices.forEach(i => n.add(i)); return n; });
+  }, [groupIdx]);
+  const handleFlip = (origIdx) => {
+    setFlipped(f => ({ ...f, [origIdx]: !f[origIdx] }));
+    if (!readSet.has(origIdx)) {
+      const nr = new Set(readSet); nr.add(origIdx); setReadSet(nr);
+      if (onCardRead) onCardRead(moduleId, nr.size, shownSet.size, terms.length);
+    }
+  };
+  const statusText = t.flip_status.replace('{read}', readSet.size).replace('{shown}', shownSet.size).replace('{total}', terms.length);
+  return (
+    <div className="mt-8">
+      <h3 className="text-lg font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.key_terms}</h3>
+      <p className="text-sm text-slate-400 mb-4">{statusText}</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {currentCardIndices.map((origIdx) => { const term = terms[origIdx]; return (
+          <div key={origIdx} className="perspective cursor-pointer h-40" onClick={() => handleFlip(origIdx)}>
+            <div className={`transform-style-3d relative w-full h-full transition-transform duration-500 ${flipped[origIdx] ? 'rotate-y-180' : ''}`}>
+              <div className="backface-hidden absolute inset-0 bg-white dark:bg-slate-800 rounded-xl p-4 flex flex-col items-center justify-center border border-slate-200 dark:border-slate-700 shadow-sm">
+                <p className="font-serif font-bold text-center text-[#004030] dark:text-[#D8C3A5]">{term.front}</p>
+                <p className="text-xs text-slate-400 mt-2">{t.flip_prompt}</p>
+              </div>
+              <div className="backface-hidden rotate-y-180 absolute inset-0 bg-[#004030] dark:bg-slate-700 rounded-xl p-4 flex items-center justify-center overflow-y-auto">
+                <p className="text-sm text-center text-[#D8C3A5] dark:text-slate-200 leading-relaxed">{term.back}</p>
+              </div>
+            </div>
+          </div>); })}
+      </div>
+      <div className="flex items-center gap-3 mt-4">
+        <button onClick={() => { setGroupIdx(0); setFlipped({}); }} className="px-4 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">{t.flip_retry}</button>
+        <button onClick={() => groupIdx < totalGroups - 1 && setGroupIdx(groupIdx + 1)} disabled={groupIdx >= totalGroups - 1} className="px-4 py-2 text-sm bg-[#004030] dark:bg-[#D8C3A5] text-white dark:text-[#004030] font-bold rounded-lg disabled:opacity-40">{t.flip_next}</button>
+      </div>
+    </div>
+  );
+};
+
+const ModuleQuiz = ({ questions, t, moduleId, onQuizSubmit, moduleName }) => {
+  const [selected, setSelected] = useState({});
+  const [submitted, setSubmitted] = useState({});
+  const [groupIdx, setGroupIdx] = useState(0);
+  const groupSize = 2;
+  const [quizIndices] = useState(() => [...Array(questions.length).keys()].sort(() => Math.random() - 0.5));
+  const totalGroups = Math.ceil(quizIndices.length / groupSize);
+  const [shuffledMaps] = useState(() => quizIndices.map(qIdx => [...Array(questions[qIdx].opts.length).keys()].sort(() => Math.random() - 0.5)));
+  const isRight = (qi) => selected[qi] !== undefined && shuffledMaps[qi][selected[qi]] === _d(questions[quizIndices[qi]].ans);
+  const totalAnswered = Object.keys(selected).length;
+  const correctCount = quizIndices.reduce((c, _, qi) => c + (isRight(qi) ? 1 : 0), 0);
+  const statusText = t.quiz_status.replace('{correct}', correctCount).replace('{answered}', totalAnswered).replace('{total}', quizIndices.length);
+  const currentStart = groupIdx * groupSize;
+  const currentIndices = quizIndices.slice(currentStart, currentStart + groupSize);
+  const groupComplete = currentIndices.every((_, i) => selected[currentStart + i] !== undefined);
+  const handleGroupSubmit = () => {
+    if (!groupComplete) return;
+    const ns = { ...submitted, [groupIdx]: true };
+    setSubmitted(ns);
+    const wrongQs = []; let correct = 0;
+    quizIndices.forEach((qIdx, qi) => { if (selected[qi] === undefined) return; if (isRight(qi)) correct++; else wrongQs.push(questions[qIdx].q); });
+    onQuizSubmit(moduleId, correct, quizIndices.length, wrongQs, moduleName);
+  };
+  return (
+    <div className="mt-8 bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-slate-700">
+      <h3 className="text-lg font-bold font-serif text-[#004030] dark:text-[#D8C3A5] mb-2">{t.quiz_title}</h3>
+      <p className="text-sm text-slate-400 mb-6">{statusText}</p>
+      {currentIndices.map((qIdx, localI) => {
+        const qi = currentStart + localI; const q = questions[qIdx]; const sMap = shuffledMaps[qi]; const isGrpSub = !!submitted[groupIdx];
+        return (
+          <div key={qIdx} className="mb-6">
+            <p className="font-bold mb-3 text-base">{qi + 1}. {q.q}</p>
+            <div className="space-y-2">
+              {sMap.map((origIdx, dIdx) => {
+                const ok = origIdx === _d(q.ans); const isSel = selected[qi] === dIdx;
+                return (
+                  <button key={dIdx} onClick={() => !isGrpSub && setSelected(s => ({ ...s, [qi]: dIdx }))}
+                    className={`w-full text-left px-4 py-3 rounded-lg border transition-all text-sm ${isGrpSub ? (ok ? 'bg-green-100 border-green-500 dark:bg-green-900/30' : isSel ? 'bg-red-100 border-red-400 dark:bg-red-900/30' : 'border-slate-200 dark:border-slate-700') : (isSel ? 'border-[#004030] dark:border-[#D8C3A5] bg-[#004030]/5 dark:bg-[#D8C3A5]/10' : 'border-slate-200 dark:border-slate-700 hover:border-slate-400')}`}>
+                    {q.opts[origIdx]}
+                  </button>);
+              })}
+            </div>
+            {isGrpSub && (
+              <p className={`mt-2 text-sm italic ${isRight(qi) ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
+                {isRight(qi) ? `✓ ${t.correct}` : `✗ ${t.incorrect}`} — {t.explanation}{t.explanation === '解析' ? '：' : ': '}{q.exp}
+              </p>)}
+          </div>);
+      })}
+      <div className="flex flex-wrap items-center gap-3">
+        {!submitted[groupIdx]
+          ? <button onClick={handleGroupSubmit} disabled={!groupComplete} className="px-6 py-2 bg-[#004030] dark:bg-[#D8C3A5] text-white dark:text-[#004030] font-bold rounded-lg disabled:opacity-40">{t.submit}</button>
+          : <>
+              {groupIdx < totalGroups - 1 && <button onClick={() => setGroupIdx(groupIdx + 1)} className="px-6 py-2 bg-[#004030] dark:bg-[#D8C3A5] text-white dark:text-[#004030] font-bold rounded-lg">{t.quiz_next}</button>}
+              <button onClick={() => { setGroupIdx(0); setSelected({}); setSubmitted({}); }} className="px-6 py-2 border border-[#004030] dark:border-[#D8C3A5] text-[#004030] dark:text-[#D8C3A5] font-bold rounded-lg">{t.quiz_retry}</button>
+            </>}
+      </div>
+    </div>
+  );
+};
+
+const H2 = ({ children, icon, number }) => (
+  <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-black text-[#004030] dark:text-[#D8C3A5] mb-6 flex items-start gap-3">
+    {icon && <span className="text-2xl sm:text-3xl shrink-0">{icon}</span>}
+    <span>{number !== undefined && <span>{number}. </span>}{children}</span>
+  </h2>
+);
+const LinkCard = ({ label, url, desc }) => (
+  <a href={url} target="_blank" rel="noopener noreferrer" className="block bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 hover:border-[#004030] dark:hover:border-[#D8C3A5] hover:shadow-md transition-all group">
+    <span className="font-bold font-serif text-sm text-[#004030] dark:text-[#D8C3A5] group-hover:underline break-words">{label}</span>
+    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-1">{desc}</p>
+  </a>
+);
+const Card = ({ children, className = "" }) => <div className={`bg-white dark:bg-slate-800 rounded-xl p-4 sm:p-6 border border-slate-200 dark:border-slate-700 ${className}`}>{children}</div>;
+const Btn = ({ children, onClick, active, className = "" }) => (
+  <button onClick={onClick} className={`px-3 py-1.5 text-sm rounded-lg border transition-all ${active ? 'bg-[#004030] text-white border-[#004030] dark:bg-[#D8C3A5] dark:text-[#004030] dark:border-[#D8C3A5]' : 'border-slate-300 dark:border-slate-600 hover:border-[#004030] dark:hover:border-[#D8C3A5]'} ${className}`}>{children}</button>
+);
+const Bar = ({ pct, color = "bg-[#004030] dark:bg-[#D8C3A5]" }) => (
+  <div className="w-full h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div className={`h-full ${color} transition-all`} style={{ width: `${Math.max(0, Math.min(100, pct))}%` }} /></div>
+);
+
+/* ---------------- Labs (top-level) ---------------- */
+const DelegationLab = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e;
+  const [v, setV] = useState({ risk: 2, freq: 4, std: 4, exp: 1 });
+  const presets = [
+    [L("衛生紙", "Toilet paper"), { risk: 1, freq: 5, std: 5, exp: 1 }],
+    [L("高價筆電", "Premium laptop"), { risk: 4, freq: 1, std: 3, exp: 2 }],
+    [L("服飾", "Fashion"), { risk: 2, freq: 3, std: 1, exp: 5 }],
+    [L("機票", "Flight ticket"), { risk: 3, freq: 2, std: 4, exp: 1 }]
+  ];
+  const items = [["risk", L("價格與風險", "Price & risk")], ["freq", L("購買頻率", "Purchase frequency")], ["std", L("商品標準化程度", "Standardisation")], ["exp", L("需要實體體驗／個人品味", "Need for physical try-on / taste")]];
+  const score = v.freq + v.std - v.risk - v.exp;
+  const lvl = score >= 4 ? 3 : score >= 1 ? 2 : score >= -2 ? 1 : 0;
+  const info = [
+    [L("H0 人類自行決策", "H0 Human decides"), L("重點在說服：品牌、體驗、KOL 與門市（OMO）。", "Focus on persuasion: brand, experience, KOLs and stores (OMO).")],
+    [L("H1 代理人協助探索", "H1 Agent assists search"), L("重點在找得到：SEO、GEO、商品 feed 與可引用的內容。", "Focus on being found: SEO, GEO, feeds and citable content.")],
+    [L("H2 代理人推薦、人類確認", "H2 Agent recommends, human confirms"), L("重點在好選擇與好驗證：結構化規格、總價透明、第三方證據。", "Focus on being chosen and verified: structured specs, transparent price, third-party evidence.")],
+    [L("H3 授權內代為交易", "H3 Agent transacts within authority"), L("重點在買得成：代理結帳、授權付款、即時庫存與補貨方案。", "Focus on being bought: agent checkout, authorised payment, live stock and replenishment.")]
+  ];
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2">{presets.map((p, i) => <Btn key={i} onClick={() => setV(p[1])}>{p[0]}</Btn>)}</div>
+      {items.map(([k, lab]) => (
+        <label key={k} className="block">
+          <div className="flex justify-between text-sm mb-1"><span>{lab}</span><span className="font-bold">{v[k]} / 5</span></div>
+          <input type="range" min="1" max="5" value={v[k]} onChange={e => setV({ ...v, [k]: +e.target.value })} className="w-full accent-[#004030] dark:accent-[#D8C3A5]" />
+        </label>))}
+      <div className="grid grid-cols-4 gap-2">{[0, 1, 2, 3].map(i => <div key={i} className={`text-center rounded-lg py-2 text-sm font-bold ${i === lvl ? 'bg-[#004030] text-white dark:bg-[#D8C3A5] dark:text-[#004030]' : 'bg-slate-100 dark:bg-slate-700 text-slate-400'}`}>H{i}</div>)}</div>
+      <div className="rounded-lg p-4 bg-[#004030]/5 dark:bg-[#D8C3A5]/10 border-l-4 border-[#D8C3A5]">
+        <p className="font-bold text-[#004030] dark:text-[#D8C3A5]">{L("推估委託程度：", "Estimated level: ")}{info[lvl][0]}</p>
+        <p className="text-sm mt-1">{info[lvl][1]}</p>
+        <p className="text-xs text-slate-500 mt-2">{L("分數 = 頻率 + 標準化 − 風險 − 體驗需求；僅供教學推估。", "Score = frequency + standardisation − risk − experience need; a teaching estimate only.")} ({score})</p>
+      </div>
+    </div>
+  );
+};
+
+const GateAuditLab = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e;
+  const gates = [
+    [L("1 找得到", "1 Be found"), [L("網站可被索引、網址穩定", "Site indexable, stable URLs"), L("商品 feed 已送進主要平台", "Feeds sent to main platforms"), L("內容依顧客任務撰寫", "Content written around customer tasks"), L("價格與庫存即時更新", "Live price and stock")]],
+    [L("2 好選擇", "2 Be chosen"), [L("規格完整並結構化", "Complete, structured specs"), L("總價（含運費等）透明", "Transparent total price"), L("差異化附數據", "Differentiation backed by data"), L("標明適用與不適用情境", "Suitable and unsuitable uses stated")]],
+    [L("3 好驗證", "3 Be verified"), [L("各通路資訊一致", "Consistent across channels"), L("有第三方測試或認證", "Third-party tests or certification"), L("真實評價且揭露贊助", "Genuine reviews, sponsorship disclosed"), L("退換貨與聯絡資訊公開", "Return policy and contacts public")]],
+    [L("4 買得成", "4 Be bought"), [L("結帳流程穩定易操作", "Stable, simple checkout"), L("透過平台支援代理結帳協定", "Agent checkout via platform"), L("交易前即時確認價格庫存", "Re-confirm price and stock"), L("金額上限與例外交真人", "Spending limits, exceptions to humans")]]
+  ];
+  const tips = [L("先修好 SEO 基本功與商品 feed，並即時更新價格庫存。", "Fix SEO basics and feeds first, and keep prices and stock live."), L("把規格與總價結構化，差異化一定要附數據。", "Structure specs and total price; back every claim with data."), L("統一各通路資訊，累積可查證的第三方證據。", "Align channel information and build verifiable third-party evidence."), L("使用平台既有的代理結帳功能，並設定護欄。", "Use your platform's agent checkout and set guardrails.")];
+  const [chk, setChk] = useState({});
+  const sc = gates.map((_, gi) => [0, 1, 2, 3].filter(i => chk[`${gi}-${i}`]).length);
+  const total = sc.reduce((a, b) => a + b, 0);
+  const weakest = sc.indexOf(Math.min(...sc));
+  return (
+    <div className="space-y-4">
+      <div className="grid md:grid-cols-2 gap-4">
+        {gates.map(([g, its], gi) => (
+          <div key={gi} className="rounded-lg border border-slate-200 dark:border-slate-700 p-3">
+            <div className="flex justify-between items-center mb-2"><span className="font-bold text-[#8A6D3B] dark:text-[#D8C3A5]">{g}</span><span className="text-sm">{sc[gi]}/4</span></div>
+            {its.map((it, i) => (
+              <label key={i} className="flex items-start gap-2 text-sm py-1 cursor-pointer">
+                <input type="checkbox" checked={!!chk[`${gi}-${i}`]} onChange={() => setChk({ ...chk, [`${gi}-${i}`]: !chk[`${gi}-${i}`] })} className="mt-1 accent-[#004030]" /><span>{it}</span>
+              </label>))}
+            <Bar pct={sc[gi] * 25} />
+          </div>))}
+      </div>
+      <div className="rounded-lg p-4 bg-[#004030]/5 dark:bg-[#D8C3A5]/10 border-l-4 border-[#D8C3A5]">
+        <p className="font-bold">{L("代理就緒度：", "Agent readiness: ")}{Math.round(total / 16 * 100)}%</p>
+        <p className="text-sm mt-1">{L("最弱的一關：", "Weakest gate: ")}<b>{gates[weakest][0]}</b>　{tips[weakest]}</p>
+        <button onClick={() => setChk({})} className="mt-2 text-xs underline text-slate-500">{L("重設", "Reset")}</button>
+      </div>
+    </div>
+  );
+};
+
+const FunnelLab = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e;
+  const [n, setN] = useState({ scen: 100, mention: 40, shortlist: 15, authReq: 60, authOk: 48, success: 44 });
+  const fields = [["scen", L("有效情境測試數", "Valid test scenarios")], ["mention", L("品牌被提及的情境數", "Scenarios mentioning brand")], ["shortlist", L("品牌入選候選清單數", "Scenarios shortlisting brand")], ["authReq", L("進入授權階段的交易數", "Transactions reaching authorisation")], ["authOk", L("完成授權的交易數", "Authorised transactions")], ["success", L("成功完成的交易數", "Successful transactions")]];
+  const set = (k, val) => setN({ ...n, [k]: Math.max(0, Math.min(100000, parseInt(val || 0, 10) || 0)) });
+  const pct = (a, b) => b > 0 ? Math.round(a / b * 100) : 0;
+  const steps = [
+    [L("探索：被提及率", "Discovery: mention rate"), pct(n.mention, n.scen), L("第 1 關找得到：檢查 SEO、feed 與第三方內容。", "Gate 1: check SEO, feeds and third-party content.")],
+    [L("考慮：被提及後入選率", "Consideration: shortlist after mention"), pct(n.shortlist, n.mention), L("第 2、3 關：補齊規格、總價與可查證證據。", "Gates 2–3: complete specs, price and verifiable evidence.")],
+    [L("授權完成率", "Authorisation completion"), pct(n.authOk, n.authReq), L("第 4 關：檢查授權流程、付款方式與例外處理。", "Gate 4: check authorisation flow, payment methods and exceptions.")],
+    [L("交易成功率", "Transaction success"), pct(n.success, n.authOk), L("第 4 關：檢查即時庫存、價格確認與結帳穩定度。", "Gate 4: check live stock, price confirmation and checkout stability.")]
+  ];
+  const worst = steps.reduce((w, s, i) => s[1] < steps[w][1] ? i : w, 0);
+  const invalid = n.mention > n.scen || n.shortlist > n.mention || n.authOk > n.authReq || n.success > n.authOk;
+  return (
+    <div className="space-y-4">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {fields.map(([k, lab]) => (<label key={k} className="text-sm"><span className="block mb-1">{lab}</span><input type="number" min="0" value={n[k]} onChange={e => set(k, e.target.value)} className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900" /></label>))}
+      </div>
+      {invalid && <p className="text-sm text-red-500">{L("後一階段的數字不應大於前一階段，請檢查輸入。", "A later stage should not exceed the earlier one; please check your inputs.")}</p>}
+      <div className="space-y-3">
+        {steps.map((s, i) => (<div key={i}><div className="flex justify-between text-sm mb-1"><span className={i === worst ? 'font-bold text-red-500' : ''}>{s[0]}</span><span className="font-bold">{s[1]}%</span></div><Bar pct={s[1]} color={i === worst ? 'bg-red-400' : undefined} /></div>))}
+      </div>
+      <div className="rounded-lg p-4 bg-[#004030]/5 dark:bg-[#D8C3A5]/10 border-l-4 border-[#D8C3A5] text-sm">
+        <p><b>{L("最大流失點：", "Biggest drop-off: ")}</b>{steps[worst][0]} — {steps[worst][2]}</p>
+        <p className="text-xs text-slate-500 mt-2">{L("注意：前兩項來自情境測試，後兩項來自實際交易，分母不同，不可混為同一個轉換率。", "Note: the first two come from scenario tests and the last two from real transactions; their denominators differ and must not be merged into one conversion rate.")}</p>
+      </div>
+    </div>
+  );
+};
+
+const RFMLab = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e;
+  const [rows, setRows] = useState([
+    { name: "A", r: 12, f: 14, m: 62000, ch: "direct", auto: false },
+    { name: "B", r: 7, f: 20, m: 9000, ch: "agent", auto: true },
+    { name: "C", r: 150, f: 6, m: 35000, ch: "direct", auto: false },
+    { name: "D", r: 25, f: 1, m: 2500, ch: "agent", auto: false }
+  ]);
+  const sR = r => r <= 30 ? 5 : r <= 60 ? 4 : r <= 90 ? 3 : r <= 180 ? 2 : 1;
+  const sF = f => f >= 12 ? 5 : f >= 6 ? 4 : f >= 3 ? 3 : f >= 2 ? 2 : 1;
+  const sM = m => m >= 50000 ? 5 : m >= 20000 ? 4 : m >= 10000 ? 3 : m >= 3000 ? 2 : 1;
+  const seg = (R, F, M) => R >= 4 && F >= 4 && M >= 4 ? L("高價值顧客", "Champion") : R >= 4 && F <= 2 ? L("新顧客", "New customer") : R <= 2 && F >= 3 ? L("流失風險", "At risk") : L("一般顧客", "Regular");
+  const upd = (i, k, val) => setRows(rows.map((r, j) => j === i ? { ...r, [k]: k === 'ch' ? val : k === 'auto' ? !r.auto : Math.max(0, Math.min(10000000, parseInt(val || 0, 10) || 0)) } : r));
+  const inp = "w-full min-w-[4rem] px-2 py-1 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm";
+  return (
+    <div className="space-y-3">
+      <p className="text-xs text-slate-500">{L("R＝距上次購買天數；F＝一年內購買次數；M＝一年內消費金額（新臺幣）。評分門檻為教學示範。", "R = days since last purchase; F = purchases in a year; M = annual spend (NT$). Thresholds are for teaching.")}</p>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[640px]">
+          <thead><tr className="text-left text-slate-500"><th className="p-1">{L("顧客", "Cust.")}</th><th className="p-1">R</th><th className="p-1">F</th><th className="p-1">M</th><th className="p-1">{L("通路", "Channel")}</th><th className="p-1">{L("自動補貨", "Auto-replenish")}</th><th className="p-1">{L("分數", "Score")}</th><th className="p-1">{L("類型", "Type")}</th></tr></thead>
+          <tbody>{rows.map((r, i) => { const R_ = sR(r.r), F_ = sF(r.f), M_ = sM(r.m); return (
+            <tr key={i} className="border-t border-slate-200 dark:border-slate-700">
+              <td className="p-1 font-bold">{r.name}</td>
+              <td className="p-1"><input type="number" className={inp} value={r.r} onChange={e => upd(i, 'r', e.target.value)} /></td>
+              <td className="p-1"><input type="number" className={inp} value={r.f} onChange={e => upd(i, 'f', e.target.value)} /></td>
+              <td className="p-1"><input type="number" className={inp} value={r.m} onChange={e => upd(i, 'm', e.target.value)} /></td>
+              <td className="p-1"><select className={inp} value={r.ch} onChange={e => upd(i, 'ch', e.target.value)}><option value="direct">{L("直接", "Direct")}</option><option value="agent">{L("代理", "Agent")}</option></select></td>
+              <td className="p-1 text-center"><input type="checkbox" checked={r.auto} onChange={() => upd(i, 'auto')} className="accent-[#004030]" /></td>
+              <td className="p-1 font-mono">{R_}-{F_}-{M_}</td>
+              <td className="p-1">{seg(R_, F_, M_)}{r.auto && <span className="block text-xs text-amber-600">{L("⚠ R、F 可能被自動補貨推高", "⚠ R and F may be inflated by auto-replenishment")}</span>}</td>
+            </tr>); })}</tbody>
+        </table>
+      </div>
+      <div className="rounded-lg p-4 bg-[#004030]/5 dark:bg-[#D8C3A5]/10 border-l-4 border-[#D8C3A5] text-sm">
+        {L("請比較直接通路與代理通路的顧客：RFM 高不等於忠誠，代理通路的分數宜分開計算，並改看毛利。", "Compare direct and agent-channel customers: high RFM is not loyalty; calculate agent-channel scores separately and use margin.")}
+      </div>
+    </div>
+  );
+};
+
+const GateDecisionLab = ({ lang }) => {
+  const L = (z, e) => lang === "zh" ? z : e;
+  const [g, setG] = useState([false, false, false, false]);
+  const q = [["G1", L("資料是否正確、完整且可存取？", "Is data correct, complete and accessible?")], ["G2", L("代理通路需求是否可測量？", "Is agent-channel demand measurable?")], ["G3", L("授權、付款風控與例外處理是否完備？", "Are authorisation, payment risk control and exceptions in place?")], ["G4", L("試行的增量毛利是否足以支應成本？", "Does pilot incremental margin cover the cost?")]];
+  let msg;
+  if (!g[0]) msg = L("停留在 0–3 個月階段：先改善商品主資料與網站，再談其他。", "Stay in the 0–3 month phase: fix product master data and the website first.");
+  else if (!g[1]) msg = L("先做小規模測試：建立情境題庫與基準 KPI，量測代理通路需求。", "Run small tests first: build a scenario bank and baseline KPIs to measure agent demand.");
+  else if (!g[2]) msg = L("可推進到 3–12 個月階段，但只開放查詢與推薦（H1–H2），不得啟用自主交易。", "You may enter the 3–12 month phase, but allow only search and recommendation (H1–H2); no autonomous transactions.");
+  else if (!g[3]) msg = L("可進行單一通路試行，但在增量毛利證實前不要擴大。", "You may run a single-channel pilot, but do not scale until incremental margin is proven.");
+  else msg = L("可進入 12–24 個月階段：擴大互通、評估自有代理人，並定期治理稽核。", "You may enter the 12–24 month phase: widen interoperability, evaluate an own agent and audit governance regularly.");
+  return (
+    <div className="space-y-3">
+      {q.map(([k, lab], i) => (
+        <div key={k} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 dark:border-slate-700 p-3">
+          <span className="text-sm"><b className="text-[#8A6D3B] dark:text-[#D8C3A5] mr-2">{k}</b>{lab}</span>
+          <div className="flex gap-2"><Btn active={g[i]} onClick={() => setG(g.map((x, j) => j === i ? true : x))}>{L("是", "Yes")}</Btn><Btn active={!g[i]} onClick={() => setG(g.map((x, j) => j === i ? false : x))}>{L("否", "No")}</Btn></div>
+        </div>))}
+      <div className="rounded-lg p-4 bg-[#004030]/5 dark:bg-[#D8C3A5]/10 border-l-4 border-[#D8C3A5] text-sm"><b>{L("判斷：", "Decision: ")}</b>{msg}</div>
+    </div>
+  );
+};
+const LABS = [DelegationLab, GateAuditLab, FunnelLab, RFMLab, GateDecisionLab];
+
+/* ---------------- App ---------------- */
+function App() {
+  const LS_KEY = 'AMC_SPA_analytics';
+  const LS_STU = 'AMC_SPA_student';
+  const blank = () => ({ time: Array(TOTAL).fill(0), clicks: Array(TOTAL).fill(0), quizCorrect: Array(TOTAL).fill(0), quizTotal: Array(TOTAL).fill(0), cardsRead: Array(TOTAL).fill(0), cardsTotal: Array(TOTAL).fill(0), wrongTopics: {} });
+  const loadLS = (key, fb) => { try { const v = localStorage.getItem(key); if (!v) return fb; const o = JSON.parse(v); return o; } catch { return fb; } };
+  const initAnalytics = () => {
+    const saved = loadLS(LS_KEY, null);
+    if (!saved || !Array.isArray(saved.time) || saved.time.length !== TOTAL) return blank();
+    const used = saved.time.reduce((a, b) => a + b, 0) > 0;
+    if (used && window.confirm(dict.zh.analytics_refresh_prompt + "\n" + dict.en.analytics_refresh_prompt)) { try { localStorage.removeItem(LS_KEY); } catch {} return blank(); }
+    return { ...blank(), ...saved };
+  };
+  const [lang, setLang] = useState('en');
+  const [isDark, setIsDark] = useState(true);
+  const [module, setModule] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [ttsState, setTtsState] = useState('idle');
+  const [studentInfo, setStudentInfo] = useState(() => loadLS(LS_STU, { group: '', dept: '', id: '', nameEn: '', nameZh: '' }));
+  const [analytics, setAnalytics] = useState(initAnalytics);
+  const menuRef = useRef(null);
+  const t = dict[lang];
+
+  const modulesList = Array.from({ length: TOTAL }, (_, i) => {
+    const nav = i === 0 ? t.m0_nav : i <= NUM_LEARN ? t[`m${i}_nav`] : i === IDX_LAB ? t.mlab_nav : i === IDX_RES ? t.mres_nav : t.mana_nav;
+    const title = i === 0 ? t.m0_title : i <= NUM_LEARN ? t[`m${i}_title`] : i === IDX_LAB ? t.mlab_title : i === IDX_RES ? t.mres_title : t.analytics_title;
+    return { id: i, num: i, icon: ICONS[i], nav, title };
+  });
+
+  useEffect(() => { document.documentElement.classList.toggle('dark', isDark); }, [isDark]);
+  useEffect(() => { document.documentElement.lang = lang === 'zh' ? 'zh-Hant-TW' : 'en-GB'; }, [lang]);
+  useEffect(() => { try { localStorage.setItem(LS_KEY, JSON.stringify(analytics)); } catch {} }, [analytics]);
+  useEffect(() => { try { localStorage.setItem(LS_STU, JSON.stringify(studentInfo)); } catch {} }, [studentInfo]);
+  useEffect(() => {
+    const id = setInterval(() => { if (document.visibilityState === 'visible') setAnalytics(a => { const tm = [...a.time]; tm[module] += 1; return { ...a, time: tm }; }); }, 1000);
+    return () => clearInterval(id);
+  }, [module]);
+  useEffect(() => {
+    const h = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false); };
+    document.addEventListener('mousedown', h); document.addEventListener('touchstart', h);
+    return () => { document.removeEventListener('mousedown', h); document.removeEventListener('touchstart', h); };
+  }, []);
+  useEffect(() => { if ('speechSynthesis' in window) { speechSynthesis.cancel(); setTtsState('idle'); } }, [module, lang]);
+
+  const go = (m) => { setModule(m); setMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const countClick = () => setAnalytics(a => { const c = [...a.clicks]; c[module] += 1; return { ...a, clicks: c }; });
+  const handleQuizSubmit = (mid, correct, total, wrongQs) => {
+    setAnalytics(a => { const qc = [...a.quizCorrect], qt = [...a.quizTotal]; qc[mid] = correct; qt[mid] = total; const wt = { ...a.wrongTopics }; wt[mid] = wrongQs || []; return { ...a, quizCorrect: qc, quizTotal: qt, wrongTopics: wt }; });
+  };
+  const handleCardRead = (mid, readCount, shownCount, totalCount) => {
+    setAnalytics(a => { const cr = [...a.cardsRead], ct = [...a.cardsTotal]; cr[mid] = readCount; ct[mid] = totalCount; return { ...a, cardsRead: cr, cardsTotal: ct }; });
+  };
+
+  const handleTTS = (action) => {
+    if (!('speechSynthesis' in window)) return;
+    if (action === 'stop') { speechSynthesis.cancel(); setTtsState('idle'); return; }
+    if (action === 'pause') { speechSynthesis.pause(); setTtsState('paused'); return; }
+    if (ttsState === 'paused') { speechSynthesis.resume(); setTtsState('playing'); return; }
+    speechSynthesis.cancel();
+    const sep = lang === 'zh' ? '。 ' : '. ';
+    let texts = [];
+    if (module === 0) {
+      texts = [t.m0_title, t.m0_intro, t.m0_why, t.m0_why_desc, ...t.m0_stats.map(s => `${s.label}: ${s.val}`), ...t.m0_modules.map(m => `${m.title}. ${m.desc}`)];
+    } else if (module >= 1 && module <= NUM_LEARN) {
+      const mk = `m${module}`;
+      texts = [t[`${mk}_title`], t[`${mk}_overview`], ...(t[`${mk}_highlights`] || []), ...[1, 2, 3, 4, 5].map(n => t[`${mk}_p${n}`]).filter(Boolean), t[`${mk}_wrapup`], ...(t[`${mk}_terms`] || []).flatMap(tm => [tm.front, tm.back])];
+    } else if (module === IDX_LAB) {
+      texts = [t.mlab_title, t.mlab_desc, ...t.mlab_labs.map(l => `${l.title}. ${l.desc}`)];
+    } else if (module === IDX_RES) {
+      texts = [t.mres_title, t.mres_desc, ...t.mres_groups.map(g => g.title)];
+    } else if (module === IDX_ANA) {
+      const tc = analytics.quizCorrect.reduce((a, b) => a + b, 0), ta = analytics.quizTotal.reduce((a, b) => a + b, 0);
+      const oa = ta > 0 ? Math.round(tc / ta * 100) : 0; const wk = [];
+      for (let i = 1; i <= NUM_LEARN; i++) if (analytics.quizTotal[i] > 0) { const a = Math.round(analytics.quizCorrect[i] / analytics.quizTotal[i] * 100); if (a < 75) wk.push({ name: modulesList[i].title, acc: a }); }
+      wk.sort((a, b) => a.acc - b.acc);
+      texts = [t.analytics_title, t.analytics_desc, `${t.analytics_total_time}: ${analytics.time.reduce((a, b) => a + b, 0)}${t.analytics_sec}`, `${t.analytics_total_clicks}: ${analytics.clicks.reduce((a, b) => a + b, 0)}${t.analytics_times}`, `${t.analytics_overall_acc}: ${oa}%`];
+      if (wk.length) { texts.push(t.analytics_wp_tts_intro); wk.forEach(w => texts.push(t.analytics_wp_tts_module.replace('{name}', w.name).replace('{acc}', w.acc))); }
+      else if (ta > 0) texts.push(t.analytics_wp_tts_allpass);
+    }
+    const utt = new SpeechSynthesisUtterance(texts.filter(Boolean).join(sep));
+    utt.rate = 0.95;
+    const voices = speechSynthesis.getVoices();
+    if (lang === 'zh') { const v = voices.find(v => v.lang === 'zh-TW' && v.name.includes('Yating')) || voices.find(v => v.lang === 'zh-TW') || voices.find(v => v.lang.startsWith('zh')); if (v) utt.voice = v; utt.lang = 'zh-TW'; }
+    else { const v = voices.find(v => v.lang === 'en-GB' && (v.name.includes('Male') || v.name.includes('Daniel'))) || voices.find(v => v.lang === 'en-GB') || voices.find(v => v.lang.startsWith('en')); if (v) utt.voice = v; utt.lang = 'en-GB'; }
+    utt.onend = () => setTtsState('idle'); utt.onerror = () => setTtsState('idle');
+    speechSynthesis.speak(utt); setTtsState('playing');
+  };
+
+  /* ---------- Pages ---------- */
+  const SvgFor = MODULE_SVGS[module];
+  const renderM0 = () => (
+    <div className="space-y-8 animate-fade-in">
+      <div className="rounded-2xl bg-gradient-to-br from-[#004030] to-[#00291f] dark:from-slate-800 dark:to-slate-900 text-white p-6 sm:p-10 shadow-lg border border-[#D8C3A5]/30">
+        <p className="text-[#D8C3A5] font-bold tracking-widest text-xs sm:text-sm uppercase mb-3">{t.brand} · {t.title}</p>
+        <h1 className="font-serif font-black text-2xl sm:text-4xl leading-tight mb-3"><span className="mr-2">{ICONS[0]}</span>0. {t.m0_title}</h1>
+        <p className="text-[#D8C3A5] font-serif italic mb-5">{t.subtitle}</p>
+        <p className="leading-relaxed text-white/90 text-base sm:text-lg">{t.m0_intro}</p>
+        <button onClick={() => go(1)} className="mt-6 px-6 py-3 bg-[#D8C3A5] text-[#004030] font-bold rounded-lg hover:bg-white transition-all">{t.m0_start}</button>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {t.m0_stats.map((s, i) => (<Card key={i} className="text-center"><p className="text-2xl sm:text-3xl font-serif font-black text-[#004030] dark:text-[#D8C3A5]">{s.val}</p><p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{s.label}</p></Card>))}
+      </div>
+      <Card><h3 className="font-serif font-bold text-xl text-[#004030] dark:text-[#D8C3A5] mb-2">{t.m0_why}</h3><p className="leading-relaxed">{t.m0_why_desc}</p></Card>
+      <SvgM0 lang={lang} />
+      <div className="grid md:grid-cols-2 gap-4">
+        {t.m0_modules.map((m, i) => (
+          <button key={i} onClick={() => go(i + 1)} className="text-left bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 hover:border-[#004030] dark:hover:border-[#D8C3A5] hover:shadow-md transition-all">
+            <div className="flex items-center gap-3 mb-2"><span className="text-2xl">{ICONS[i + 1]}</span><span className="font-serif font-black text-[#D8C3A5] text-lg">{m.num}</span><span className="font-serif font-bold text-[#004030] dark:text-[#D8C3A5]">{m.title}</span></div>
+            <p className="text-sm text-slate-600 dark:text-slate-400">{m.desc}</p>
+          </button>))}
+      </div>
+    </div>
+  );
+
+  const renderLearn = () => {
+    const mk = `m${module}`;
+    return (
+      <div className="space-y-6 text-base sm:text-lg leading-relaxed text-slate-700 dark:text-slate-300 animate-fade-in" key={`learn-${module}`}>
+        <H2 icon={ICONS[module]} number={module}>{t[`${mk}_title`]}</H2>
+        <div className="bg-[#004030]/5 dark:bg-[#D8C3A5]/5 rounded-xl p-5 border-l-4 border-[#D8C3A5]">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-2">{t.overview_label}</h3>
+          <p>{t[`${mk}_overview`]}</p>
+        </div>
+        <div>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-3">{t.highlights_label}</h3>
+          <div className="flex flex-wrap gap-2">{t[`${mk}_highlights`].map((h, i) => <span key={i} className="px-3 py-1 bg-[#004030]/10 dark:bg-[#D8C3A5]/10 text-[#004030] dark:text-[#D8C3A5] rounded-full text-sm font-medium">{h}</span>)}</div>
+        </div>
+        <div className="space-y-4">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">{t.deep_dive_label}</h3>
+          <p>{t[`${mk}_p1`]}</p>
+          <p className="p-4 bg-slate-100 dark:bg-slate-800 rounded-lg italic font-serif border-l-4 border-[#004030] dark:border-[#D8C3A5]">{t[`${mk}_p2`]}</p>
+          <p>{t[`${mk}_p3`]}</p>
+          {t[`${mk}_p4`] && <p>{t[`${mk}_p4`]}</p>}
+          {t[`${mk}_p5`] && <p>{t[`${mk}_p5`]}</p>}
+        </div>
+        <div className="flex justify-center"><SvgFor lang={lang} /></div>
+        <FlipCardDeck key={`cards-${module}`} terms={t[`${mk}_terms`]} t={t} moduleId={module} onCardRead={handleCardRead} />
+        <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-5">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-2">{t.wrapup_label}</h3>
+          <p className="italic">{t[`${mk}_wrapup`]}</p>
+        </div>
+        <ModuleQuiz key={`quiz-${module}`} questions={t[`${mk}_q`]} t={t} moduleId={module} onQuizSubmit={handleQuizSubmit} moduleName={t[`${mk}_title`]} />
+      </div>
+    );
+  };
+
+  const renderLab = () => (
+    <div className="space-y-6 animate-fade-in">
+      <H2 icon={ICONS[IDX_LAB]} number={IDX_LAB}>{t.mlab_title}</H2>
+      <p className="text-base sm:text-lg leading-relaxed">{t.mlab_desc}</p>
+      {t.mlab_labs.map((l, i) => { const Lab = LABS[i]; return (
+        <Card key={i}>
+          <h3 className="font-serif font-bold text-lg text-[#004030] dark:text-[#D8C3A5] flex items-center gap-2"><IconFlask size={18} />{l.title}</h3>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{l.desc}</p>
+          <Lab lang={lang} />
+        </Card>); })}
+    </div>
+  );
+
+  const renderRes = () => (
+    <div className="space-y-6 animate-fade-in">
+      <H2 icon={ICONS[IDX_RES]} number={IDX_RES}>{t.mres_title}</H2>
+      <p className="text-base sm:text-lg leading-relaxed">{t.mres_desc}</p>
+      {t.mres_groups.map((g, i) => (
+        <div key={i}>
+          <h3 className="font-serif font-bold text-lg text-[#004030] dark:text-[#D8C3A5] mb-3 flex items-center gap-2"><IconBookOpen size={18} />{g.title}</h3>
+          <div className="grid sm:grid-cols-2 gap-3">{g.links.map((l, j) => <LinkCard key={j} {...l} />)}</div>
+        </div>))}
+    </div>
+  );
+
+  const sanitizeStudentId = (v) => v.replace(/[^0-9]/g, '').slice(0, 12);
+  const sanitizeName = (v) => v.replace(/[<>"'&\\]/g, '').slice(0, 50);
+  const renderAna = () => {
+    const sum = (k) => analytics[k].reduce((a, b) => a + b, 0);
+    const tc = sum('quizCorrect'), ta = sum('quizTotal');
+    const cr = sum('cardsRead'), ct = sum('cardsTotal');
+    const allCards = Array.from({ length: NUM_LEARN }, (_, i) => t[`m${i + 1}_terms`].length).reduce((a, b) => a + b, 0);
+    const weak = [];
+    for (let i = 1; i <= NUM_LEARN; i++) if (analytics.quizTotal[i] > 0) { const a = Math.round(analytics.quizCorrect[i] / analytics.quizTotal[i] * 100); if (a < 75) weak.push({ i, acc: a }); }
+    weak.sort((a, b) => a.acc - b.acc);
+    const visited = Array.from({ length: NUM_LEARN }, (_, i) => analytics.time[i + 1] > 0).filter(Boolean).length;
+    const formOK = studentInfo.group && studentInfo.dept && studentInfo.id && studentInfo.nameEn && studentInfo.nameZh;
+    const exportCSV = () => {
+      if (!formOK) return;
+      const q = (s) => `"${String(s).replace(/"/g, '""')}"`;
+      const head = ['Group', 'Dept', 'Student ID', 'English Name', 'Chinese Name', 'Module', 'Time (s)', 'Clicks', 'Cards Read', 'Cards Total', 'Quiz Correct', 'Quiz Total', 'Accuracy (%)', 'Wrong Questions'];
+      const lines = [head.map(q).join(',')];
+      modulesList.forEach((m, i) => {
+        const acc = analytics.quizTotal[i] > 0 ? Math.round(analytics.quizCorrect[i] / analytics.quizTotal[i] * 100) : '';
+        lines.push([studentInfo.group, studentInfo.dept, studentInfo.id, studentInfo.nameEn, studentInfo.nameZh, m.nav, analytics.time[i], analytics.clicks[i], analytics.cardsRead[i], analytics.cardsTotal[i], analytics.quizCorrect[i], analytics.quizTotal[i], acc, (analytics.wrongTopics[i] || []).join(' | ')].map(q).join(','));
+      });
+      const d = new Date(); const ds = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+      const blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a');
+      a.href = url; a.download = `${dict.zh.brand} ${dict.zh.title}_${studentInfo.nameEn} ${studentInfo.nameZh}_${ds}.csv`;
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+    const clearAll = () => { if (window.confirm(t.analytics_wp_clear_confirm)) { try { localStorage.removeItem(LS_KEY); } catch {} setAnalytics(blank()); } };
+    const field = (k, label, ph, fn) => (
+      <label className="text-sm"><span className="block mb-1">{label}</span>
+        <input value={studentInfo[k]} placeholder={ph} onChange={e => setStudentInfo({ ...studentInfo, [k]: fn(e.target.value) })} className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900" /></label>);
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <H2 icon={ICONS[IDX_ANA]} number={IDX_ANA}>{t.analytics_title}</H2>
+        <p className="text-base sm:text-lg leading-relaxed">{t.analytics_desc}</p>
+        <p className="text-sm text-green-700 dark:text-green-400">{t.analytics_wp_saved}</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[[t.analytics_total_time, `${sum('time')} ${t.analytics_sec}`], [t.analytics_total_clicks, `${sum('clicks')} ${t.analytics_times}`], [t.analytics_overall_acc, ta > 0 ? `${Math.round(tc / ta * 100)}%` : t.analytics_no_data], [t.analytics_card_usage, `${Math.round(cr / allCards * 100)}%`]].map((s, i) => (
+            <Card key={i} className="text-center"><p className="text-xl sm:text-2xl font-serif font-black text-[#004030] dark:text-[#D8C3A5]">{s[1]}</p><p className="text-xs sm:text-sm text-slate-500 mt-1">{s[0]}</p></Card>))}
+        </div>
+        <Card>
+          <h3 className="font-serif font-bold text-lg text-[#004030] dark:text-[#D8C3A5] mb-3">{t.analytics_progress_title}</h3>
+          <Bar pct={visited / NUM_LEARN * 100} /><p className="text-xs text-slate-500 mt-1 mb-3">{visited} / {NUM_LEARN}</p>
+          <div className="grid sm:grid-cols-2 gap-2">
+            {Array.from({ length: NUM_LEARN }, (_, k) => k + 1).map(i => (
+              <button key={i} onClick={() => go(i)} className="flex items-center justify-between gap-2 text-left text-sm rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2 hover:border-[#004030] dark:hover:border-[#D8C3A5]">
+                <span className="truncate">{ICONS[i]} {modulesList[i].nav}</span>
+                <span className="shrink-0 text-xs">{analytics.time[i] > 0 ? <span className="text-green-600 dark:text-green-400">{t.analytics_progress_visited}</span> : <span className="text-slate-400">{t.analytics_progress_not_visited}</span>}{analytics.quizTotal[i] > 0 && <span className="ml-2 text-[#8A6D3B] dark:text-[#D8C3A5]">{t.analytics_progress_quiz_done}</span>}</span>
+              </button>))}
+          </div>
+        </Card>
+        <Card>
+          <h3 className="font-serif font-bold text-lg text-[#004030] dark:text-[#D8C3A5] mb-3 flex items-center gap-2"><IconAlertTriangle size={18} />{t.analytics_wp_title}</h3>
+          {ta === 0 ? <p className="text-sm text-slate-500">{t.analytics_wp_none}</p> : weak.length === 0 ? <p className="text-sm text-green-600 dark:text-green-400 flex items-center gap-2"><IconCheckCircle size={16} />{t.analytics_wp_allpass}</p> :
+            weak.map(w => (
+              <div key={w.i} className="mb-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                <p className="font-bold text-sm">{ICONS[w.i]} {modulesList[w.i].nav} — {w.acc}%</p>
+                {(analytics.wrongTopics[w.i] || []).length > 0 && <><p className="text-xs mt-1">{t.analytics_wp_incorrect}</p><ul className="list-disc ml-5 text-xs">{analytics.wrongTopics[w.i].map((q, j) => <li key={j}>{q}</li>)}</ul></>}
+                <button onClick={() => go(w.i)} className="text-xs mt-2 text-[#004030] dark:text-[#D8C3A5] underline">{t.analytics_wp_goto}</button>
+              </div>))}
+        </Card>
+        <Card className="overflow-x-auto">
+          <h3 className="font-serif font-bold text-lg text-[#004030] dark:text-[#D8C3A5] mb-3">{t.analytics_detail_title}</h3>
+          <table className="w-full text-sm min-w-[560px]">
+            <thead><tr className="text-left text-slate-500 border-b border-slate-200 dark:border-slate-700"><th className="p-2">{t.analytics_module}</th><th className="p-2">{t.analytics_time}</th><th className="p-2">{t.analytics_clicks}</th><th className="p-2">{t.analytics_cards_read_total}</th><th className="p-2">{t.analytics_correct_ans_total}</th></tr></thead>
+            <tbody>{modulesList.map((m, i) => (
+              <tr key={i} className="border-b border-slate-100 dark:border-slate-700/50">
+                <td className="p-2">{m.nav}</td><td className="p-2">{analytics.time[i]} {t.analytics_sec}</td><td className="p-2">{analytics.clicks[i]}</td>
+                <td className="p-2">{i >= 1 && i <= NUM_LEARN ? `${analytics.cardsRead[i]} / ${t[`m${i}_terms`].length}` : '—'}</td>
+                <td className="p-2">{i >= 1 && i <= NUM_LEARN ? (analytics.quizTotal[i] > 0 ? `${analytics.quizCorrect[i]} / ${analytics.quizTotal[i]} / ${t[`m${i}_q`].length}` : t.analytics_no_data) : '—'}</td>
+              </tr>))}</tbody>
+          </table>
+        </Card>
+        <Card>
+          <h3 className="font-serif font-bold text-lg text-[#004030] dark:text-[#D8C3A5] mb-3">{t.analytics_form_title}</h3>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <label className="text-sm"><span className="block mb-1">{t.analytics_group}</span>
+              <select value={studentInfo.group} onChange={e => setStudentInfo({ ...studentInfo, group: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900">
+                <option value="">{t.analytics_group_select}</option>{t.group_options.map(g => <option key={g} value={g}>{g}</option>)}
+              </select></label>
+            {field('dept', t.analytics_dept, t.analytics_dept_ph, v => sanitizeName(v).slice(0, 20))}
+            {field('id', t.analytics_id, t.analytics_id_ph, sanitizeStudentId)}
+            {field('nameEn', t.analytics_name_en, t.analytics_name_en_ph, sanitizeName)}
+            {field('nameZh', t.analytics_name_zh, t.analytics_name_zh_ph, sanitizeName)}
+          </div>
+          <div className="flex flex-wrap items-center gap-3 mt-4">
+            <button onClick={exportCSV} disabled={!formOK} className="px-5 py-2 bg-[#004030] dark:bg-[#D8C3A5] text-white dark:text-[#004030] font-bold rounded-lg disabled:opacity-40">{t.analytics_export_csv}</button>
+            {!formOK && <span className="text-xs text-slate-500">{t.analytics_fill_required}</span>}
+            <button onClick={clearAll} className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg ml-auto">{t.analytics_wp_clear}</button>
+          </div>
+        </Card>
+      </div>
+    );
+  };
+
+  const page = module === 0 ? renderM0() : module <= NUM_LEARN ? renderLearn() : module === IDX_LAB ? renderLab() : module === IDX_RES ? renderRes() : renderAna();
+  const hb = "p-2 hover:bg-white/10 rounded-lg";
+  return (
+    <div className="min-h-screen flex flex-col pt-16 bg-[#f4f4f4] dark:bg-[#121212] text-slate-800 dark:text-slate-200 font-sans selection:bg-[#004030] selection:text-white dark:selection:bg-[#D8C3A5] dark:selection:text-[#004030]">
+      <header className="fixed top-0 left-0 right-0 h-16 bg-[#004030] dark:bg-slate-900 text-white z-50 shadow-lg border-b border-[#D8C3A5]/30">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 h-16 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
+            <div className="relative" ref={menuRef}>
+              <button onClick={() => setMenuOpen(!menuOpen)} className={hb} aria-label={t.nav_modules}>{menuOpen ? <IconX /> : <IconMenu />}</button>
+              {menuOpen && (
+                <div className="absolute top-full left-0 mt-1 w-72 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-5rem)] overflow-y-auto bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 z-[100]">
+                  <p className="px-4 pt-3 pb-1 text-xs font-bold uppercase tracking-wider text-slate-400">{t.nav_modules}</p>
+                  {modulesList.map(m => (
+                    <button key={m.id} onClick={() => go(m.id)} className={`w-full flex items-center gap-3 px-4 py-3 text-sm text-left hover:bg-slate-100 dark:hover:bg-slate-700 ${module === m.id ? 'font-bold text-[#004030] dark:text-[#D8C3A5] bg-[#004030]/5 dark:bg-[#D8C3A5]/10' : ''}`}>
+                      <span className="shrink-0">{m.icon}</span><span className="truncate">{m.nav}</span>
+                    </button>))}
+                </div>)}
+            </div>
+            <button onClick={() => go(0)} className={hb} aria-label={t.nav_home}><IconHome size={18} /></button>
+            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-2 min-w-0">
+              <span className="font-serif font-black text-[#D8C3A5] text-lg tracking-widest">{t.brand}</span>
+              <span className="hidden sm:inline font-serif font-bold text-sm md:text-base truncate">{t.title}</span>
+            </button>
+          </div>
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            <span className="hidden lg:inline text-xs text-[#D8C3A5]/80 mr-1">{t.audio_read}</span>
+            {ttsState === 'playing'
+              ? <button onClick={() => handleTTS('pause')} className={hb} aria-label={t.tts_pause}><IconPause size={18} /></button>
+              : <button onClick={() => handleTTS('play')} className={hb} aria-label={t.tts_play}><IconPlay size={18} /></button>}
+            <button onClick={() => handleTTS('stop')} className={hb} aria-label={t.tts_stop} disabled={ttsState === 'idle'}><IconSquare size={16} /></button>
+            <button onClick={() => setLang(lang === 'en' ? 'zh' : 'en')} className="px-2 sm:px-3 py-1 rounded-lg border border-[#D8C3A5]/50 text-sm font-bold hover:bg-white/10">{lang === 'en' ? '中' : 'EN'}</button>
+            <button onClick={() => setIsDark(!isDark)} className={hb} aria-label="theme">{isDark ? <IconSun size={18} /> : <IconMoon size={18} />}</button>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex-1 flex w-full max-w-7xl mx-auto">
+        <aside className="hidden md:block w-64 shrink-0 border-r border-slate-200 dark:border-slate-800">
+          <nav className="sticky top-16 h-[calc(100vh-6rem)] overflow-y-auto py-4">
+            {modulesList.map(m => (
+              <button key={m.id} onClick={() => go(m.id)} className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-all ${module === m.id ? 'bg-[#004030] text-white dark:bg-[#D8C3A5] dark:text-[#004030] font-bold' : 'hover:bg-slate-200 dark:hover:bg-slate-800'}`}>
+                <span className="shrink-0 w-5 flex justify-center">{sideIcon(m.id)}</span><span className="leading-snug">{m.nav}</span>
+              </button>))}
+          </nav>
+        </aside>
+        <main className="flex-1 min-w-0 px-4 sm:px-8 py-8" onClick={countClick}>
+          {page}
+          <div className="mt-12 flex justify-between items-center pt-8 border-t border-slate-300 dark:border-slate-700">
+            <button onClick={() => go(Math.max(0, module - 1))} disabled={module === 0} className="px-4 py-2 rounded-lg border border-[#004030] dark:border-[#D8C3A5] text-[#004030] dark:text-[#D8C3A5] font-bold disabled:opacity-0">{t.nav_prev}</button>
+            <button onClick={() => go(Math.min(TOTAL - 1, module + 1))} disabled={module === TOTAL - 1} className="px-4 py-2 rounded-lg bg-[#004030] dark:bg-[#D8C3A5] text-white dark:text-[#004030] font-bold disabled:opacity-0">{t.nav_next}</button>
+          </div>
+        </main>
+      </div>
+
+      <footer className="h-8 bg-[#004030] flex items-center justify-between px-3 sm:px-4 shrink-0 gap-2">
+        <span className="text-[#D8C3A5]/60 text-[10px] sm:text-xs truncate">{t.date} · {t.copyright}</span>
+        <span className="text-[#D8C3A5]/60 text-[10px] sm:text-xs flex items-center gap-3 shrink-0">
+          <span>{t.architect_label}&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline">{t.architect_name}</a></span>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-[#D8C3A5] hover:text-white font-bold">Top ↑</button>
+        </span>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
